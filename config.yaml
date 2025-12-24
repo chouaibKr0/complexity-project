@@ -1,0 +1,31 @@
+# Configuration for NP-Complexity Project
+app:
+  name: "NP-Complexity Study"
+  debug: false
+  log_level: "INFO"
+
+paths:
+  data_dir: "data"
+  results_dir: "results"
+  logs_dir: "results/logs"
+  plots_dir: "results/plots"
+
+benchmarks:
+  timeout_seconds: 300
+  max_variables: 100
+  max_clauses: 500
+  runs_per_instance: 3
+
+sat:
+  default_algorithm: "dpll"
+
+three_sat:
+  default_algorithm: "dpll"
+
+subset_sum:
+  default_algorithm: "dynamic"
+  max_target_value: 1000000
+
+experiment:
+  save_intermediate: true
+  plot_results: true

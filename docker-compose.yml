@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  complexity:
+    build: .
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+    environment:
+      - LOG_LEVEL=INFO

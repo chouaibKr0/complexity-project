@@ -1,0 +1,7 @@
+c Simple 3-SAT instance
+c Each clause has exactly 3 literals
+p cnf 4 4
+1 2 3 0
+-1 2 -3 0
+1 -2 4 0
+-2 3 -4 0
