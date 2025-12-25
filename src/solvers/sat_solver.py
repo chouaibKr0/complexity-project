@@ -56,12 +56,8 @@ class SATSolver(BaseSolver):
         Returns:
             SolverResult with satisfiability and assignment.
         """
-        # Validate input
-        validate_sat_instance(clauses)
-        
-        # Auto-detect number of variables
-        if num_variables is None:
-            num_variables = max(abs(lit) for clause in clauses for lit in clause)
+        # Validate and normalize input (variables become 1, 2, ..., n)
+        clauses, num_variables = validate_sat_instance(clauses, num_variables)
         
         self.stats["calls"] += 1
         nodes = 0

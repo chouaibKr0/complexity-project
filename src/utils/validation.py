@@ -3,9 +3,42 @@ from typing import Any
 from .errors import ValidationError
 
 
-def validate_sat_instance(clauses: list[list[int]], num_variables: int = None) -> bool:
+def _normalize_clauses(clauses: list[list[int]]) -> tuple[list[list[int]], int, dict[int, int]]:
     """
-    Validate a SAT instance in CNF form.
+    Normalize clauses so variables are consecutively numbered from 1 to n.
+    
+    Args:
+        clauses: List of clauses with potentially non-consecutive variable numbers.
+    
+    Returns:
+        Tuple of (normalized_clauses, num_variables, var_mapping)
+        - normalized_clauses: Clauses with variables renumbered 1 to n
+        - num_variables: Number of distinct variables (n)
+        - var_mapping: Dict mapping original var -> new var (for debugging/reverse mapping)
+    """
+    # Collect all variables and sort them
+    all_vars = sorted(set(abs(lit) for clause in clauses for lit in clause))
+    num_variables = len(all_vars)
+    
+    # Create mapping: original_var -> new_var (1, 2, 3, ...)
+    var_mapping = {old_var: new_var for new_var, old_var in enumerate(all_vars, start=1)}
+    
+    # Normalize clauses
+    normalized_clauses = []
+    for clause in clauses:
+        normalized_clause = []
+        for lit in clause:
+            sign = 1 if lit > 0 else -1
+            new_var = var_mapping[abs(lit)]
+            normalized_clause.append(sign * new_var)
+        normalized_clauses.append(normalized_clause)
+    
+    return normalized_clauses, num_variables, var_mapping
+
+
+def validate_sat_instance(clauses: list[list[int]], num_variables: int = None) -> tuple[list[list[int]], int]:
+    """
+    Validate and normalize a SAT instance in CNF form.
     
     Args:
         clauses: List of clauses, where each clause is a list of literals.
@@ -13,7 +46,7 @@ def validate_sat_instance(clauses: list[list[int]], num_variables: int = None) -
         num_variables: Expected number of variables (optional).
     
     Returns:
-        True if valid.
+        Tuple of (normalized_clauses, num_variables) where variables are 1 to n.
     
     Raises:
         ValidationError: If the instance is invalid.
@@ -39,23 +72,29 @@ def validate_sat_instance(clauses: list[list[int]], num_variables: int = None) -
     if num_variables is not None and len(all_vars) != num_variables:
         raise ValidationError(f"Expected {num_variables} variables, found {len(all_vars)}")
     
-    return True
+    # Normalize to consecutive variables 1, 2, ..., n
+    normalized_clauses, n, _ = _normalize_clauses(clauses)
+    
+    return normalized_clauses, n
 
 
-def validate_3sat_instance(clauses: list[list[int]]) -> bool:
+def validate_3sat_instance(clauses: list[list[int]]) -> tuple[list[list[int]], int]:
     """
-    Validate a 3-SAT instance (each clause has exactly 3 literals).
+    Validate and normalize a 3-SAT instance (each clause has exactly 3 literals).
+    
+    Returns:
+        Tuple of (normalized_clauses, num_variables) where variables are 1 to n.
     
     Raises:
         ValidationError: If any clause doesn't have exactly 3 literals.
     """
-    validate_sat_instance(clauses)
-    
     for i, clause in enumerate(clauses):
+        if not isinstance(clause, list):
+            raise ValidationError(f"Clause {i} must be a list")
         if len(clause) != 3:
             raise ValidationError(f"Clause {i} has {len(clause)} literals, expected 3")
     
-    return True
+    return validate_sat_instance(clauses)
 
 
 def validate_subset_sum_instance(numbers: list[int], target: int) -> bool:
