@@ -1,6 +1,6 @@
 """Tests for reductions."""
 import pytest
-from src.reductions import reduce_sat_to_3sat, reduce_3sat_to_subset_sum
+from src.reductions import reduce_sat_to_3sat, reduce_3sat_to_subset_sum, reduce_sat_to_subset_sum
 from src.solvers import SATSolver, ThreeSATSolver, SubsetSumSolver
 
 
@@ -75,3 +75,29 @@ class TestThreeSATToSubsetSum:
         ss_result = ss_solver.solve(reduction.numbers, reduction.target)
         
         assert three_sat_result.satisfiable == ss_result.satisfiable
+
+class TestSATToSubsetSum:
+    """Test SAT to Subset Sum reduction."""
+    
+    def test_simple_reduction(self):
+        """Test basic SAT to Subset Sum reduction."""
+        clauses = [[1, 2, 3], [-1, -2, 3]]
+        result = reduce_sat_to_subset_sum(clauses, 3)
+        
+        assert len(result.numbers) > 0
+        assert result.target > 0
+    
+    def test_preserves_satisfiability(self):
+        """Reduction should preserve satisfiability."""
+        # Satisfiable SAT
+        clauses = [[1, 2, 3], [-1, 2, -3], [1, -2, 3]]
+        
+        sat_solver = SATSolver()
+        sat_result = sat_solver.solve(clauses)
+        
+        reduction = reduce_sat_to_subset_sum(clauses, 3)
+        
+        ss_solver = SubsetSumSolver()
+        ss_result = ss_solver.solve(reduction.numbers, reduction.target)
+        
+        assert sat_result.satisfiable == ss_result.satisfiable
