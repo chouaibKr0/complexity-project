@@ -169,6 +169,21 @@ def reduce_3sat_to_ss_cmd(
     console.print(f"Numbers: {len(result.numbers)}")
     console.print(f"Target: {result.target}")
 
+@reduce_app.command("sat-to-subset-sum")
+def reduce_sat_to_ss_cmd(
+    file: Path = typer.Option(..., "--file", "-f", help="Input SAT CNF file"),
+):
+    """Reduce SAT to Subset Sum."""
+    from .reductions import reduce_sat_to_subset_sum
+    from .utils.parsers import parse_dimacs_cnf
+    
+    console.print("[bold]Reducing SAT to Subset Sum[/bold]")
+    instance = parse_dimacs_cnf(file)
+    result = reduce_sat_to_subset_sum(instance.clauses, instance.num_variables)
+    
+    console.print(f"Numbers: {len(result.numbers)}")
+    console.print(f"Target: {result.target}")
+
 
 if __name__ == "__main__":
     app()
