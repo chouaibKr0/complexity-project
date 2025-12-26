@@ -7,8 +7,12 @@ It remains NP-complete (Cook-Levin theorem).
 This solver can either:
 1. Use the general SAT solver
 2. Implement specialized algorithms for 3-SAT
+    - Brute-force search
+    - Backtracking
+    - DPLL algorithm
 """
 
+from src.solvers.lit import DPLL
 from .base import BaseSolver, SolverResult
 from .sat_solver import SATSolver
 from ..utils.validation import validate_3sat_instance
@@ -78,20 +82,16 @@ class ThreeSATSolver(BaseSolver):
             algorithm=self.algorithm
         )
     
+
     def _brute_force(self, clauses: list[list[int]], n: int) -> tuple[bool, dict | None, int]:
         """
-        Brute force for 3-SAT.
-        
+        Brute-force search for satisfying assignment.
         Args:
-            clauses: List of clauses.
+            clauses: List of clauses in CNF form.
             n: Number of variables.
         Returns:
-            satisfiable : bool
-            assignment : dict | None
-            nodes_explored : int
-
+            Tuple of (satisfiable, assignment dict or None, nodes explored).
         """
-
         # # or loop using format() for Binary Strings
         # for i in range(2**n):
         #     # Convert to binary string and pad with zeros
@@ -101,288 +101,384 @@ class ThreeSATSolver(BaseSolver):
 
         for i in range(2**n):
             # Convert i to binary and extract bits
-            assignment = [bool((i >> j) & 1) for j in range(n)]
+            A = [bool((i >> j) & 1) for j in range(n)]
 
-            satisfied = True
-            
-            for clause in clauses:
-                if not self._assign_to_clause(assignment, clause):
-                    satisfied = False
-                    break
-            if satisfied:
-                assignment_dict = {var+1: bool(val) for var, val in enumerate(assignment)}
-                return True, assignment_dict, i + 1  # Number of assignments explored
-        return False, None, 2**n  # All assignments explored
+            if self._eval_cnf(clauses, A) == True:
+                assignment_dict = {var+1: bool(val) for var, val in enumerate(A)}
+                return (True, assignment_dict, i+1)  # i+1 nodes explored
+        return (False, None, 2**n)
 
+    def _eval_cnf(self,F: list[list[int]], A: list[bool]) -> bool:
+        """
+        Evaluate CNF formula F under assignment A.
+        Args:
+            F: CNF formula (list of clauses).
+            A: Assignment list where A[i] is the value of variable (i+1).
+        Returns:
+            True if F is satisfied under A, False otherwise.
+        """
+        for C in F:
+            if self._eval_clause(C, A) == False:
+                return False
+        return True
+
+    def _eval_clause(self, C: list[int], A: list[bool]) -> bool:
+        """
+        Evaluate a single clause C under assignment A.
+        Args:
+            C: Clause (list of literals).
+            A: Assignment list where A[i] is the value of variable (i+1).
+        Returns:        
+            True if C is satisfied under A, False otherwise.    
+        """
+        for l in C:
+            if self._eval_literal(l, A) == True:
+                return True
+        return False
+    
+    def _eval_literal(self, l: int, A: list[bool]) -> bool:
+        """
+        Evaluate a single literal l under assignment A.
+        Args:
+            l: Literal (positive or negative integer).
+            A: Assignment list where A[i] is the value of variable (i+1).
+        Returns:
+            True if l is satisfied under A, False otherwise.
+        """
+        var_index = abs(l) - 1  # Convert to 0-based index
+        if l > 0:
+            return A[var_index]  # Positive literal
+        else:
+            return not A[var_index]  # Negative literal
+    
     def _backtrack(self, clauses: list[list[int]], n: int, partial_assignment: dict | None = None) -> tuple[bool, dict | None, int]:
         """
-        Backtracking for 3-SAT.
+        Backtracking search for satisfying assignment.
         Args:
-            clauses: List of clauses.
+            clauses: List of clauses in CNF form.
             n: Number of variables.
-            partial_assignment: Current partial assignment of variables.
+            partial_assignment: Current partial assignment (dict).
         Returns:
-            satisfiable : bool
-            assignment : dict | None
-            nodes_explored : int
+            Tuple of (satisfiable, assignment dict or None, nodes explored).
         """
-        if partial_assignment is None:
-            partial_assignment = {}
-        
-        nodes = 1
-        
-        # Check for empty clause (conflict)
-        if self._find_empty_clause(clauses):
-            return False, None, nodes
-        
-        # Check if all clauses satisfied
-        if self._partial_assign_to_clauses(partial_assignment, clauses)[0]:
-            return True, partial_assignment, nodes
-        
-        # Check if no clauses left (all satisfied by apply_literal)
-        if clauses == []:
-            return True, partial_assignment, nodes
-        
-        x = self._pick_unassigned_literal(partial_assignment, n)
-        
-        # All variables assigned but not all clauses satisfied - shouldn't happen
-        if x is None:
-            return False, None, nodes
-        
-        
-        # Try x = True
-        sat1, assign1, nodes1 = self._backtrack(self._apply_literal(clauses, x, negative=False), n, {**partial_assignment, x: True})
-        if sat1:
-            return True, assign1, nodes + nodes1
-        
-        # Try x = False
-        sat2, assign2, nodes2 = self._backtrack(self._apply_literal(clauses, x, negative=True), n, {**partial_assignment, x: False})
-        return sat2, assign2, nodes + nodes1 + nodes2
+        counter = [0]  # mutable container for node count
+        ok, sol = self._bt(clauses, n, {}, counter)
+        return ok, sol, counter[0]
 
-
- 
-
-    def _dpll(self, clauses: list[list[int]], n: int, partial_assignment: dict | None = None) -> tuple[bool, dict | None, int]:
+    def _bt(self,F: list[list[int]], N: int, P: dict, counter: list[int]) -> tuple[bool, dict | None]:
         """
-        DPLL for 3-SAT.
-        """
-        if partial_assignment is None:
-            partial_assignment = {}
-        else:
-            partial_assignment = partial_assignment.copy()  # Don't modify original
-        
-        nodes = 1
-        
-        # Unit propagation
-        unit_clauses = self._find_unit_clauses(clauses)
-        for l in unit_clauses:
-            clauses = self._apply_literal(clauses, abs(l), negative=(l < 0))
-            partial_assignment[abs(l)] = (l > 0)
-        
-        # Pure literal elimination
-        pure_literals = self._find_pure_literals(clauses)
-        for l in pure_literals:
-            clauses = self._apply_literal(clauses, abs(l), negative=(l < 0))
-            partial_assignment[abs(l)] = (l > 0)
-        
-        # Base cases
-        if clauses == []:
-            return True, partial_assignment, nodes
-        if self._find_empty_clause(clauses):
-            return False, None, nodes
-        
-        # Pick a variable to branch on (from first clause)
-        # Standard DPLL: just pick any unassigned variable
-        var = None
-        for clause in clauses:
-            for lit in clause:
-                if abs(lit) not in partial_assignment:
-                    var = abs(lit)
-                    break
-            if var is not None:
-                break
-        
-        if var is None:
-            # All variables in clauses are assigned but clauses remain - check satisfaction
-            return self._partial_assign_to_clauses(partial_assignment, clauses)[0], partial_assignment, nodes
-        
-        # Try var = True
-        new_clauses = self._apply_literal(clauses, var, negative=False)
-        sat1, assign1, nodes1 = self._dpll(new_clauses, n, {**partial_assignment, var: True})
-        if sat1:
-            return True, assign1, nodes + nodes1
-        
-        # Try var = False
-        new_clauses = self._apply_literal(clauses, var, negative=True)
-        sat2, assign2, nodes2 = self._dpll(new_clauses, n, {**partial_assignment, var: False})
-        return sat2, assign2, nodes + nodes1 + nodes2
-    
-    def _assign_to_clause(self, assignment: list[bool], clause: list[int]) -> bool:
-        """
-        Check if a clause is satisfied by the current assignment.
-        
+        Backtracking helper function.
         Args:
-            assignment: Current variable assignment (index 0 = var 1, etc.).
-            clause: A single clause (list of literals).
+            F: CNF formula (list of clauses).
+            N: Number of variables.
+            P: Partial assignment (some variables assigned).
+            counter: Mutable container for node count.
         Returns:
-            True if clause is satisfied, False otherwise.
+            Tuple of (satisfiable, assignment dict or None).
         """
-        for lit in clause:
-            var = abs(lit) - 1  # Convert to 0-indexed
-            value = assignment[var]
-            # lit > 0 means we need var=True, lit < 0 means we need var=False
-            if (lit > 0 and value) or (lit < 0 and not value):
-                return True
-        return False
+        # P: partial assignment (some variables assigned)
+        counter[0] += 1  # count this node
+        if self._exists_falsified_clause(F, P):
+            return False, None
+        if len(P) == N:
+            return True, P
 
-    def _assign_to_clauses(self, assignment: list[bool], clauses: list[list[int]]) -> tuple[bool, list[int] | None]:
-        """
-        Check if all clauses are satisfied by the current assignment.
-        
-        Args:
-            assignment: Current variable assignment.
-            clauses: List of clauses.
-        Returns:
-            Tuple of (all_satisfied: bool, first_unsatisfied_clause: list[int] | None)
-        """
-        for clause in clauses:
-            if not self._assign_to_clause(assignment, clause):
-                return False, clause
-        return True, None
+        x = self._select_unassigned_var(N, P)
 
-    def _partial_assign_to_clauses(self, partial_assignment: dict, clauses: list[list[int]]) -> tuple[bool, list[int] | None]:
-        """
-        Check if clauses are satisfied or undetermined by a partial assignment.
-        
-        Args:
-            partial_assignment: Current partial variable assignment {var: bool}.
-            clauses: List of clauses.
-        Returns:
-            Tuple of (all_satisfied: bool, first_unsatisfied_clause: list[int] | None)
-            - (True, None) if all clauses are satisfied
-            - (False, clause) if a clause is unsatisfied or undetermined
-        """
-        for clause in clauses:
-            clause_satisfied = False
-            for lit in clause:
-                var = abs(lit)
-                if var in partial_assignment:
-                    value = partial_assignment[var]
-                    # Check if this literal satisfies the clause
-                    if (lit > 0 and value) or (lit < 0 and not value):
-                        clause_satisfied = True
-                        break
-            if not clause_satisfied:
-                return False, clause
-        return True, None
-
-    def _find_unit_clauses(self, clauses: list[list[int]]) -> list[int]:
-        """
-        Find all unit clauses (clauses with exactly one literal).
-        
-        Returns:
-            List of literals from unit clauses.
-        """
-        unit_literals = []
-        for clause in clauses:
-            if len(clause) == 1:
-                unit_literals.append(clause[0])
-        return unit_literals
-
-    def _find_pure_literals(self, clauses: list[list[int]]) -> set[int]:
-        """
-        Find pure literals (literals that appear only positive or only negative).
-        
-        Returns:
-            Set of pure literals (with their sign).
-        """
-        positive = set()
-        negative = set()
-        
-        for clause in clauses:
-            for lit in clause:
-                if lit > 0:
-                    positive.add(lit)
-                else:
-                    negative.add(abs(lit))
-        
-        # Pure positive: appear positive but never negative
-        pure_positive = positive - negative
-        # Pure negative: appear negative but never positive
-        pure_negative = negative - positive
-        
-        result = set(pure_positive)
-        result.update(-lit for lit in pure_negative)
-        return result
-
-    def _find_empty_clause(self, clauses: list[list[int]]) -> bool:
-        """
-        Check if any clause is empty (unsatisfiable).
-        
-        Returns:
-            True if an empty clause exists, False otherwise.
-        """
-        for clause in clauses:
-            if len(clause) == 0:
-                return True
-        return False
-
-    def _find_2literal_clause(self, clauses: list[list[int]]) -> tuple[bool, tuple[int, int] | None]:
-        """
-        Find a clause with exactly 2 literals.
-        
-        Returns:
-            Tuple of (found: bool, literals: tuple[int, int] | None)
-        """
-        for clause in clauses:
-            if len(clause) == 2:
-                return True, (clause[0], clause[1])
+        for v in [True, False]:
+            P2 = {**P, x: v}
+            ok, sol = self._bt(F, N, P2, counter)
+            if ok:
+                return True, sol
         return False, None
 
-    def _pick_unassigned_literal(self, partial_assignment: dict, n: int) -> int | None:
+    def _exists_falsified_clause(self, F: list[list[int]], P: dict) -> bool:
         """
-        Pick an unassigned variable.
-        
+        Check if there exists a falsified clause under partial assignment P.
         Args:
-            partial_assignment: Current partial assignment.
-            n: Total number of variables.
+            F: CNF formula (list of clauses).
+            P: Partial assignment (some variables assigned).
         Returns:
-            An unassigned variable (1 to n), or None if all assigned.
+            True if there exists a falsified clause, False otherwise.
         """
-        for var in range(1, n + 1):
-            if var not in partial_assignment:
-                return var
-        return None  # All variables assigned
+        for  C in F:
+            if self._clause_status(C, P) == FALSIFIED:
+                return True
+        return False
 
-    def _apply_literal(self, clauses: list[list[int]], literal: int, negative: bool = False) -> list[list[int]]:
+    def _clause_status(self, C: list[int], P: dict) -> int:
         """
-        Apply a literal assignment: F|x if negative is False else F|¬x.
-        Removes satisfied clauses and removes the negation from remaining clauses.
-        
+        Determine the status of clause C under partial assignment P.
         Args:
-            clauses: Current list of clauses.
-            literal: Variable to apply (positive integer).
-            negative: If True, apply ¬literal (set var to False).
+            C: Clause (list of literals).
+            P: Partial assignment (some variables assigned).
         Returns:
-            New list of clauses after applying the literal.
+            SATISFIED, FALSIFIED, or UNRESOLVED.
         """
-        # Determine the satisfying literal and falsifying literal
-        if negative:
-            sat_lit = -literal   # -x satisfies when we set x=False
-            false_lit = literal  # x is false when we set x=False
-        else:
-            sat_lit = literal    # x satisfies when we set x=True
-            false_lit = -literal # -x is false when we set x=True
-        
-        new_clauses = []
-        for clause in clauses:
-            # If clause contains the satisfying literal, it's satisfied - skip it
-            if sat_lit in clause:
+        all_assigned = True
+        for l in C:
+            var = abs(l)
+            val = P.get(var)
+            if val is None:
+                all_assigned = False
                 continue
-            # Otherwise, remove the falsifying literal from the clause
-            new_clause = [lit for lit in clause if lit != false_lit]
-            new_clauses.append(new_clause)
+            if val == (l > 0):
+                return SATISFIED
+        return FALSIFIED if all_assigned else UNRESOLVED
+    
+    def _select_unassigned_var(self, N: int, P: dict) -> int:
+        """
+        Select an unassigned variable.
+        Args:
+            N: Number of variables.
+            P: Partial assignment (some variables assigned).
+        Returns:
+            An unassigned variable index.
+        """
+        for x in range(1, N+1):
+            if x not in P:
+                return x
+        raise Exception("All variables assigned")
+
+    def _dpll(self, clauses: list[list[int]], n: int, partial_assignment: dict | None = None) -> tuple[bool, dict | None, int]:
+    
+        """
+        DPLL algorithm for solving 3-SAT.
+        Args:
+            clauses: List of clauses in CNF form.
+            n: Number of variables.
+            partial_assignment: Current partial assignment (dict).
+        Returns:
+            Tuple of (satisfiable, assignment dict or None, nodes explored).
+        """
+        nodes = 1  # Count this current function call as 1 node
+
+        # 1. Unit Propagation
+        (conflict, F1, P1) = self._unit_propagate(clauses, partial_assignment or {})
+        if conflict:
+            return (False, None, nodes)
+
+        # 2. Pure Literal Elimination
+        (F2, P2) = self._pure_literal_elimination(F1, P1, n)
         
-        return new_clauses
+        # 3. Check Base Cases
+        if self._has_empty_clause(F2):
+            return (False, None, nodes)
+        if self._no_clauses_left(F2):
+            return (True, P2, nodes)
+
+        # 4. Branching
+        x = self._choose_branch_var(F2, P2)
+        # Branch 1: Try x = True
+        # Note: simplify/unit_propagate will handle the logic of adding x to P
+        # We pass the new assignment P2 updated with x:True
+        P = {**P2, x: True}
+        (ok, sol, nodes_true) = self._dpll(F2,n, P)
+        nodes += nodes_true # Add nodes from left branch
+
+        if ok:
+            return (True, sol, nodes)
+
+        # Branch 2: Try x = False
+        P = {**P2, x: False}
+        (ok, sol, nodes_false) = self._dpll(F2, n,P )
+        nodes += nodes_false # Add nodes from right branch
+
+        return (ok, sol, nodes)
 
 
+    def _unit_propagate(self, F: list[list[int]], P: dict ) -> tuple[bool, list[list[int]], dict]:
+        """
+        Unit propagation step in DPLL.
+        Args:
+            F: Current formula (list of clauses).
+            P: Current partial assignment.
+        Returns:
+            Tuple of (conflict detected, simplified formula, updated partial assignment).
+        """
+        # Make a copy of F initially so we don't modify the input list reference outside
+        # (Though in your recursive structure, F is likely already a new list from simplify)
+        current_F = F
+        current_P = P
+
+        while True:
+            # Check for immediate conflict before looking for unit clauses
+            if self._has_empty_clause(current_F):
+                return (True, current_F, current_P)
+
+            # IMPORTANT: You must find unit clauses relative to the *current simplified F*
+            # In your simplify logic, clauses shrink. A unit clause is a clause of size 1.
+            
+            # We need to simplify first to see unit clauses exposed by previous steps?
+            # Actually, simpler approach:
+            # 1. Simplify F based on current P (this removes false literals)
+            # 2. Check for empty clauses (conflict)
+            # 3. Check for unit clauses (size 1)
+            
+            # Let's align with your structure:
+            current_F = self._simplify(current_F, current_P)
+            
+            if self._has_empty_clause(current_F):
+                return (True, current_F, current_P)
+                
+            U = self._find_unit_clause(current_F, current_P)
+            if U is None:
+                break
+
+            l = U[0]
+            # Update P
+            current_P = {**current_P, abs(l): (l > 0)}
+            # Loop continues, next iteration will simplify F with this new literal
+
+        return (False, current_F, current_P)
+
+
+    def _pure_literal_elimination(self, F: list[list[int]], P: dict, N: int) -> tuple[list[list[int]], dict]:
+        """
+        Pure literal elimination step in DPLL.
+        Args:
+            F: Current formula (list of clauses).
+            P: Current partial assignment.
+            N: Number of variables.
+        Returns:
+            Tuple of (simplified formula, updated partial assignment).
+        """
+        current_F = F
+        current_P = P
+        
+        # Note: simplify must be called inside the loop because
+        # eliminating one pure literal might make another one pure (or satisfy clauses)
+        
+        # We simplify once at start to ensure F is clean
+        current_F = self._simplify(current_F, current_P)
+
+        while (l := self._exists_pure_literal(current_F, current_P, N)):
+            current_P = {**current_P, abs(l): (l > 0)}
+            current_F = self._simplify(current_F, current_P)
+        
+        return (current_F, current_P)
+
+
+    def _exists_pure_literal(self, F: list[list[int]], P: dict, N: int) -> int | None:
+        """
+        Check for existence of a pure literal in F under partial assignment P.
+        Args:
+            F: Current formula (list of clauses).
+            P: Current partial assignment.
+            N: Number of variables.
+        Returns:
+            A pure literal (int) if exists, else None.
+        """
+        # Optimized to check only variables present in current F
+        # Tracking counts is faster than iterating N times
+        
+        counts = {} # var -> {True/False seen}
+        
+        for C in F:
+            for l in C:
+                var = abs(l)
+                # No need to check 'if var in P' because simplify() removes assigned vars from F
+                if var not in counts:
+                    counts[var] = set()
+                counts[var].add(l > 0)
+        
+        for var, polarities in counts.items():
+            if len(polarities) == 1:
+                is_pos = list(polarities)[0]
+                return var if is_pos else -var
+                
+        return None
+
+
+    def _simplify(self, F: list[list[int]], P: dict) -> list[list[int]]:
+        """
+        Simplify formula F under partial assignment P.
+        Args:
+            F: Current formula (list of clauses).
+            P: Current partial assignment.
+        Returns:
+            Simplified formula (list of clauses).
+        """
+        F_new = []
+        for C in F:
+            # Logic to remove satisfied clauses and false literals
+            status = self._clause_status(C, P)
+            if status == SATISFIED:
+                continue # Clause removed
+            
+            # If not satisfied, rebuild clause removing false literals
+            # (Already handled by your logic below effectively, but let's be explicit)
+            
+            C_new = []
+            for l in C:
+                var = abs(l)
+                is_pos = (l > 0)
+                
+                # If var is in P, check value
+                if var in P:
+                    val = P[var]
+                    if val == is_pos:
+                        # Clause is satisfied! We shouldn't be here due to CLAUSE_STATUS check
+                        # But if we are, break outer and skip appending C_new
+                        break 
+                    else:
+                        # Literal is False, remove it (don't add to C_new)
+                        pass
+                else:
+                    # Var not in P, keep literal
+                    C_new.append(l)
+            else:
+                # Only append if we didn't break (meaning clause wasn't satisfied)
+                F_new.append(C_new)
+                
+        return F_new
+
+
+    def _has_empty_clause(self, F: list[list[int]]) -> bool:
+        """
+        Check if there exists an empty clause in F.
+        Args:
+            F: Current formula (list of clauses).
+        Returns:
+            True if there is an empty clause, False otherwise.
+        """
+        return any(len(C) == 0 for C in F)
+
+
+    def _find_unit_clause(self, F: list[list[int]], P: dict) -> list[int] | None:
+        """
+        Find a unit clause in F.
+        Args:
+            F: Current formula (list of clauses).
+            P: Current partial assignment.
+        Returns:
+            A unit clause (list of one literal) if exists, else None.
+        """
+        for C in F:
+            if len(C) == 1:
+                return C
+        return None
+
+
+    def _choose_branch_var(self, F: list[list[int]], P: dict) -> int | None:
+        """
+        Simple heuristic: Pick first variable from first clause.
+        Args:
+            F: Current formula (list of clauses).
+            P: Current partial assignment.
+        Returns:
+            A variable (int) to branch on if exists, else None.
+        """
+        for C in F:
+            for l in C:
+                return abs(l) # Since simplify removes assigned vars, this is safe
+        return None 
+
+
+    def _no_clauses_left(self, F):
+        return len(F) == 0
+
+
+SATISFIED = 0
+FALSIFIED = 1
+UNRESOLVED = 2
