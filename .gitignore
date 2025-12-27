@@ -16,3 +16,4 @@ results/plots/*
 !results/plots/.gitkeep
 .DS_Store
 *.log
+env/
