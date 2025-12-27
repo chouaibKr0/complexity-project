@@ -11,7 +11,6 @@ Reduction technique:
 - Clauses with k>3 literals: (a ∨ b ∨ c ∨ d ∨ ...) -> 
     (a ∨ b ∨ y1) ∧ (¬y1 ∨ c ∨ y2) ∧ (¬y2 ∨ d ∨ y3) ∧ ... (chain with auxiliary variables)
 
-TODO: Implement the reduction
 """
 from dataclasses import dataclass
 
