@@ -25,11 +25,24 @@ def verify_subset_sum_solution(numbers: list[int], target: int, subset: list[int
     
     Complexity: O(n) - polynomial time
     
-    TODO: Implement verification logic
     """
-    # TODO: Implement Subset Sum verification
-    # 1. Verify all elements in subset are from the original numbers
-    # 2. Verify the sum of subset equals target
-    # 3. Optionally: verify no duplicate elements
+
+    # Guard against invalid subset
+    if subset is None:
+        return False
     
-    raise NotImplementedError("Subset Sum verifier not implemented")
+    # Build a frequency map of the original numbers
+    counts = {}
+    for x in numbers:
+        counts[x] = counts.get(x, 0) + 1
+
+    # Verify all elements of subset come from numbers
+    total = 0
+    for x in subset:
+        if x not in counts or counts[x] == 0:
+            return False
+        counts[x] -= 1
+        total += x
+
+    # Verify sum equals target
+    return total == target
