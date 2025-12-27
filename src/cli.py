@@ -124,7 +124,42 @@ def run_benchmark(
     """Run benchmarks."""
     console.print(f"[bold]Running {problem} benchmarks[/bold]")
     console.print(f"Sizes: {sizes}, Algorithms: {algorithms}")
-    # TODO: Connect to benchmark runner
+
+    from .benchmarks.runner import BenchmarkRunner, BenchmarkConfig
+    import pandas as pd
+
+    size_list = [int(s) for s in sizes.split(",") if s.strip()]
+    algo_list = [a.strip() for a in algorithms.split(",") if a.strip()]
+    
+    run_benchmarks = BenchmarkRunner().run_sat_benchmark if problem == "sat" else \
+                     BenchmarkRunner().run_3sat_benchmark if problem == "3sat" else \
+                     BenchmarkRunner().run_subset_sum_benchmark if problem == "subset_sum" else None
+    config = BenchmarkConfig(
+        problem_type=problem,
+        algorithms=algo_list,
+        sizes=size_list,
+        instances_per_size=instances
+    )
+    results = run_benchmarks(config)
+
+    # results: list of dict or ExperimentResult
+    if isinstance(results, pd.DataFrame):
+        df = results
+    else:
+        try:
+            import pandas as pd
+            df = pd.DataFrame([r if isinstance(r, dict) else r.__dict__ for r in results])
+        except Exception:
+            df = results
+
+    console.print(f"[bold green]Benchmark complete![/bold green]")
+    if hasattr(df, 'shape'):
+        console.print(f"Results: {df.shape[0]} rows")
+    if output:
+        df.to_csv(output, index=False)
+        console.print(f"Saved results to {output}")
+    else:
+        console.print(df.head() if hasattr(df, 'head') else df)
 
 
 @reduce_app.command("sat-to-3sat")

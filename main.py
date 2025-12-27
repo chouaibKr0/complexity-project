@@ -59,8 +59,9 @@ def main():
     # print(f"Assignment: {result.solution}")
     # print(f"Time: {result.time_seconds:.4f}s")
     
-    print("Implement the TODO sections in src/solvers/ to get started!")
-    print()
+    from src.cli import app
+    app()  # This launches the Typer CLI
+
 
 
 if __name__ == "__main__":

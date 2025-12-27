@@ -22,8 +22,6 @@ def analyze_results(df: pd.DataFrame) -> dict:
     
     Returns:
         Dictionary with analysis results.
-    
-    TODO: Implement analysis
     """
     analysis = {}
 
@@ -83,8 +81,6 @@ def plot_complexity(
     
     Returns:
         List of saved plot file paths.
-    
-    TODO: Implement plotting
     """
     output_dir = output_dir or settings.paths.plots_dir
     output_dir = Path(output_dir)

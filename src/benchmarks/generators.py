@@ -27,20 +27,19 @@ def generate_random_sat(
     
     Returns:
         List of clauses, where each clause is a list of literals.
-    
-    TODO: Implement random SAT generation
+
     """
     if seed is not None:
         random.seed(seed)
         np.random.seed(seed)
     
-    # TODO: Generate random SAT instance
-    # For each clause:
-    #   1. Choose clause size uniformly from [min_clause_size, max_clause_size]
-    #   2. Choose that many distinct variables
-    #   3. Randomly negate each variable
-    
-    raise NotImplementedError("Random SAT generator not implemented")
+    clauses = []
+    for _ in range(num_clauses):
+        k = random.randint(min_clause_size, max_clause_size)
+        vars_ = random.sample(range(1, num_variables + 1), k)
+        clause = [v if random.choice([True, False]) else -v for v in vars_]
+        clauses.append(clause)
+    return clauses
 
 
 def generate_random_3sat(
@@ -61,8 +60,7 @@ def generate_random_3sat(
     
     Note: The clause-to-variable ratio affects satisfiability probability.
           Around ratio 4.26, there's a phase transition.
-    
-    TODO: Implement random 3-SAT generation
+
     """
     if num_variables < 3:
         raise ValueError("3-SAT needs at least 3 variables")
@@ -70,12 +68,12 @@ def generate_random_3sat(
     if seed is not None:
         random.seed(seed)
     
-    # TODO: Generate random 3-SAT instance
-    # For each clause:
-    #   1. Choose 3 distinct variables
-    #   2. Randomly negate each
-    
-    raise NotImplementedError("Random 3-SAT generator not implemented")
+    clauses = []
+    for _ in range(num_clauses):
+        vars_ = random.sample(range(1, num_variables + 1), 3)
+        clause = [v if random.choice([True, False]) else -v for v in vars_]
+        clauses.append(clause)
+    return clauses
 
 
 def generate_random_subset_sum(
@@ -97,32 +95,42 @@ def generate_random_subset_sum(
     
     Returns:
         Tuple of (numbers list, target).
-    
-    TODO: Implement random Subset Sum generation
+
     """
     if seed is not None:
         random.seed(seed)
         np.random.seed(seed)
     
-    # TODO: Generate random Subset Sum instance
-    # If satisfiable=True:
-    #   1. Generate random numbers
-    #   2. Select a random subset
-    #   3. Target = sum of that subset
-    # If satisfiable=False:
-    #   1. Generate numbers carefully to avoid solutions
-    # If satisfiable=None:
-    #   1. Generate random numbers and random target
-    
-    raise NotImplementedError("Random Subset Sum generator not implemented")
+    numbers = [random.randint(1, max_value) for _ in range(num_elements)]
+    if satisfiable is True:
+        # Pick a random subset (possibly empty)
+        mask = [random.choice([True, False]) for _ in range(num_elements)]
+        subset = [num for num, m in zip(numbers, mask) if m]
+        target = sum(subset)
+    elif satisfiable is False:
+        # Try to make unsatisfiable: set target > sum(numbers)
+        target = sum(numbers) + random.randint(1, max_value)
+    else:
+        # Random target
+        target = random.randint(1, sum(numbers))
+    return numbers, target
 
 
 def generate_hard_sat_instance(num_variables: int, seed: int = None) -> list[list[int]]:
     """
-    Generate a SAT instance near the satisfiability threshold.
-    
+    Generate a 3-SAT instance near the satisfiability threshold (hard region).
     For 3-SAT, the hard region is around clause/variable ratio of 4.26.
-    
-    TODO: Implement hard instance generation
+    Variables are numbered 1..num_variables.
     """
-    raise NotImplementedError("Hard SAT generator not implemented")
+    if num_variables < 3:
+        raise ValueError("3-SAT needs at least 3 variables")
+    if seed is not None:
+        random.seed(seed)
+    ratio = 4.26
+    num_clauses = int(round(ratio * num_variables))
+    clauses = []
+    for _ in range(num_clauses):
+        vars_ = random.sample(range(1, num_variables + 1), 3)
+        clause = [v if random.choice([True, False]) else -v for v in vars_]
+        clauses.append(clause)
+    return clauses

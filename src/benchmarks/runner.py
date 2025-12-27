@@ -51,34 +51,107 @@ class BenchmarkRunner:
     def run_sat_benchmark(self, config: BenchmarkConfig) -> pd.DataFrame:
         """
         Run SAT benchmarks across different sizes and algorithms.
-        
-        TODO: Implement benchmark execution
         """
-        # TODO: Implement SAT benchmarking
-        # 1. For each size in config.sizes:
-        #    2. Generate instances_per_size random instances
-        #    3. For each algorithm in config.algorithms:
-        #       4. Create solver with that algorithm
-        #       5. Solve each instance, respecting timeout
-        #       6. Record results
-        
-        raise NotImplementedError("SAT benchmark runner not implemented")
+        from .generators import generate_random_sat
+        import time
+        self.results.clear()
+        for size in config.sizes:
+            for inst_id in range(config.instances_per_size):
+                clauses = generate_random_sat(size, size * 4, min_clause_size=1, max_clause_size=5, seed=config.seed + inst_id)
+                for algo in config.algorithms:
+                    solver = SATSolver(algorithm=algo)
+                    timer = Timer()
+                    timed_out = False
+                    nodes = 0
+                    with timer:
+                        try:
+                            result = solver.solve(clauses, size, timeout=config.timeout_seconds)
+                            nodes = getattr(result, 'nodes_explored', 0)
+                            sat = getattr(result, 'satisfiable', None)
+                        except Exception:
+                            sat = None
+                            timed_out = True
+                    self.results.append(BenchmarkResult(
+                        problem_type="sat",
+                        algorithm=algo,
+                        size=size,
+                        instance_id=inst_id,
+                        satisfiable=sat,
+                        time_seconds=timer.elapsed,
+                        nodes_explored=nodes,
+                        timed_out=timed_out or (timer.elapsed > config.timeout_seconds)
+                    ))
+        return self.to_dataframe()
     
     def run_3sat_benchmark(self, config: BenchmarkConfig) -> pd.DataFrame:
         """
         Run 3-SAT benchmarks.
-        
-        TODO: Implement benchmark execution
         """
-        raise NotImplementedError("3-SAT benchmark runner not implemented")
+        from .generators import generate_random_3sat
+        import time
+        self.results.clear()
+        for size in config.sizes:
+            for inst_id in range(config.instances_per_size):
+                clauses = generate_random_3sat(size, int(4.26 * size), seed=config.seed + inst_id)
+                for algo in config.algorithms:
+                    solver = ThreeSATSolver(algorithm=algo)
+                    timer = Timer()
+                    timed_out = False
+                    nodes = 0
+                    with timer:
+                        try:
+                            result = solver.solve(clauses, size, timeout=config.timeout_seconds)
+                            nodes = getattr(result, 'nodes_explored', 0)
+                            sat = getattr(result, 'satisfiable', None)
+                        except Exception:
+                            sat = None
+                            timed_out = True
+                    self.results.append(BenchmarkResult(
+                        problem_type="3sat",
+                        algorithm=algo,
+                        size=size,
+                        instance_id=inst_id,
+                        satisfiable=sat,
+                        time_seconds=timer.elapsed,
+                        nodes_explored=nodes,
+                        timed_out=timed_out or (timer.elapsed > config.timeout_seconds)
+                    ))
+        return self.to_dataframe()
     
     def run_subset_sum_benchmark(self, config: BenchmarkConfig) -> pd.DataFrame:
         """
         Run Subset Sum benchmarks.
-        
-        TODO: Implement benchmark execution
         """
-        raise NotImplementedError("Subset Sum benchmark runner not implemented")
+        from .generators import generate_random_subset_sum
+        import time
+        self.results.clear()
+        for size in config.sizes:
+            for inst_id in range(config.instances_per_size):
+                numbers, target = generate_random_subset_sum(size, satisfiable=None, seed=config.seed + inst_id)
+                for algo in config.algorithms:
+                    solver = SubsetSumSolver(algorithm=algo)
+                    timer = Timer()
+                    timed_out = False
+                    nodes = 0
+                    with timer:
+                        try:
+                            result = solver.solve(numbers, target, timeout=config.timeout_seconds)
+                            nodes = getattr(result, 'nodes_explored', 0)
+                            sat = getattr(result, 'satisfiable', None)
+                        except Exception:
+                            sat = None
+                            timed_out = True
+                    self.results.append(BenchmarkResult(
+                        problem_type="subset_sum",
+                        algorithm=algo,
+                        size=size,
+                        instance_id=inst_id,
+                        satisfiable=sat,
+                        time_seconds=timer.elapsed,
+                        nodes_explored=nodes,
+                        timed_out=timed_out or (timer.elapsed > config.timeout_seconds)
+                    ))
+        return self.to_dataframe()
     
     def run_all(self, configs: list[BenchmarkConfig]) -> dict[str, pd.DataFrame]:
         """Run all configured benchmarks."""
