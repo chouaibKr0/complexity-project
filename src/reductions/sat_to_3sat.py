@@ -42,52 +42,96 @@ def reduce_sat_to_3sat(clauses: list[list[int]], num_variables: int = None) -> R
     
     Complexity: O(sum of clause lengths) - polynomial time
     
-    TODO: Implement the reduction algorithm
+   
     """
     if num_variables is None:
         num_variables = max(abs(lit) for clause in clauses for lit in clause) if clauses else 0
-    
-    # TODO: Implement SAT to 3-SAT reduction
-    # 
-    # Strategy for each clause based on its size:
-    # 
-    # Size 1: (a) - needs 2 auxiliary variables y, z
-    #   -> (a ∨ y ∨ z) ∧ (a ∨ y ∨ ¬z) ∧ (a ∨ ¬y ∨ z) ∧ (a ∨ ¬y ∨ ¬z)
-    #
-    # Size 2: (a ∨ b) - needs 1 auxiliary variable y
-    #   -> (a ∨ b ∨ y) ∧ (a ∨ b ∨ ¬y)
-    #
-    # Size 3: (a ∨ b ∨ c)
-    #   -> Keep as is
-    #
-    # Size k > 3: (l1 ∨ l2 ∨ ... ∨ lk) - needs k-3 auxiliary variables
-    #   -> (l1 ∨ l2 ∨ y1) ∧ (¬y1 ∨ l3 ∨ y2) ∧ ... ∧ (¬y_{k-3} ∨ l_{k-1} ∨ lk)
-    
-    raise NotImplementedError("SAT to 3-SAT reduction not implemented")
+
+    reduced_clauses: list[list[int]] = []
+
+    aux_var_counter = num_variables + 1
+    auxiliary_var_start = aux_var_counter
+
+    for clause in clauses:
+        size = len(clause)
+
+        if size == 1:
+            a = clause[0]
+            y = aux_var_counter
+            z = aux_var_counter + 1
+            aux_var_counter += 2
+
+            reduced_clauses.extend(
+                transform_clause_size_1(a, y, z)
+            )
+
+        elif size == 2:
+            a, b = clause
+            y = aux_var_counter
+            aux_var_counter += 1
+
+            reduced_clauses.extend(
+                transform_clause_size_2(a, b, y)
+            )
+
+        elif size == 3:
+            reduced_clauses.append(clause.copy())
+
+        else:  # size > 3
+            reduced = transform_clause_size_large(clause, aux_var_counter)
+            reduced_clauses.extend(reduced)
+            aux_var_counter += size - 3
+
+    return ReductionResult(
+        original_variables=num_variables,
+        original_clauses=len(clauses),
+        reduced_variables=aux_var_counter - 1,
+        reduced_clauses=len(reduced_clauses),
+        reduced_instance=reduced_clauses,
+        auxiliary_var_start=auxiliary_var_start
+    )
 
 
 def transform_clause_size_1(literal: int, aux_var_1: int, aux_var_2: int) -> list[list[int]]:
     """
     Transform a 1-literal clause to 3-SAT clauses.
-    
-    TODO: Implement this helper
     """
-    pass
+    return [
+        [literal,  aux_var_1,  aux_var_2],
+        [literal,  aux_var_1, -aux_var_2],
+        [literal, -aux_var_1,  aux_var_2],
+        [literal, -aux_var_1, -aux_var_2],
+    ]
 
 
 def transform_clause_size_2(lit1: int, lit2: int, aux_var: int) -> list[list[int]]:
     """
     Transform a 2-literal clause to 3-SAT clauses.
-    
-    TODO: Implement this helper
     """
-    pass
+    return [
+        [lit1, lit2,  aux_var],
+        [lit1, lit2, -aux_var],
+    ]
 
 
 def transform_clause_size_large(literals: list[int], aux_var_start: int) -> list[list[int]]:
     """
     Transform a clause with >3 literals to 3-SAT clauses.
-    
-    TODO: Implement this helper
     """
-    pass
+    clauses: list[list[int]] = []
+
+    # First clause
+    clauses.append([literals[0], literals[1], aux_var_start])
+
+    current_aux = aux_var_start
+
+    # Chain middle clauses
+    for i in range(2, len(literals) - 2):
+        next_aux = current_aux + 1
+        clauses.append([-current_aux, literals[i], next_aux])
+        current_aux = next_aux
+
+    # Last clause
+    clauses.append([-current_aux, literals[-2], literals[-1]])
+
+    return clauses
