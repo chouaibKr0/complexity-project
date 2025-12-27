@@ -33,7 +33,14 @@ def verify_sat_solution(clauses: list[list[int]], assignment: dict[int, bool]) -
     #   - A negative literal -i is satisfied if assignment[i] = False
     # Return True only if ALL clauses are satisfied
     
-    raise NotImplementedError("SAT verifier not implemented")
+    # Check each clause - ALL must be satisfied
+    for clause in clauses:
+        if not evaluate_clause(clause, assignment):
+            # Found an unsatisfied clause -> formula is not satisfied
+            return False
+    
+    # All clauses satisfied
+    return True
 
 
 def evaluate_literal(literal: int, assignment: dict[int, bool]) -> bool:
@@ -42,7 +49,18 @@ def evaluate_literal(literal: int, assignment: dict[int, bool]) -> bool:
     
     TODO: Implement this helper
     """
-    pass
+    # Get the variable index (absolute value of literal)
+    var = abs(literal)
+    
+    # Get the variable's truth value from assignment
+    var_value = assignment.get(var, False)
+    
+    # Positive literal: return var value directly
+    # Negative literal: return negation of var value
+    if literal > 0:
+        return var_value
+    else:
+        return not var_value
 
 
 def evaluate_clause(clause: list[int], assignment: dict[int, bool]) -> bool:
@@ -51,4 +69,12 @@ def evaluate_clause(clause: list[int], assignment: dict[int, bool]) -> bool:
     
     TODO: Implement this helper
     """
-    pass
+    # A clause is a disjunction (OR) of literals
+    # It's satisfied if AT LEAST ONE literal is True
+    for literal in clause:
+        if evaluate_literal(literal, assignment):
+            # Found a true literal -> clause is satisfied
+            return True
+    
+    # No literal was true -> clause is unsatisfied
+    return False
