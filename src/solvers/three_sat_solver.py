@@ -12,7 +12,6 @@ This solver can either:
     - DPLL algorithm
 """
 
-from src.solvers.lit import DPLL
 from .base import BaseSolver, SolverResult
 from .sat_solver import SATSolver
 from ..utils.validation import validate_3sat_instance
