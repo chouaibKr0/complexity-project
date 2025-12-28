@@ -6,13 +6,26 @@ Same as SAT verifier but also checks that each clause has exactly 3 literals.
 """
 from typing import Any
 
+from src.solvers.base import SolverResult
 from src.utils.errors import ValidationError
-from src.utils.validation import validate_sat_instance
+from src.utils.validation import validate_sat_instance, normalize_sat
 from .sat_verifier import verify_sat_solution
 
 
+def verify_3sat_solver_result(clauses: list[list[int]], result: SolverResult) -> bool:
+    """
+    Verify the result from a 3-SAT solver.
+    Args:
+        clauses: 3-CNF formula (each clause has exactly 3 literals).
+        result: SolverResult from the 3-SAT solver.
+    Returns:
+        True if the solver result is correct, False otherwise.
+    """
+    if not isinstance(result, SolverResult):
+        raise ValidationError("Result must be a SolverResult instance.")
+    return verify_3sat_solution(clauses, result.solution) == result.satisfiable
 
-def verify_3sat_solution(clauses: list[list[int]], assignment: dict[int, bool]) -> bool:
+def verify_3sat_solution(clauses: list[list[int]], assignment: Any) -> bool:
     """
     Verify that an assignment satisfies a 3-SAT formula.
     
@@ -23,54 +36,42 @@ def verify_3sat_solution(clauses: list[list[int]], assignment: dict[int, bool]) 
     Returns:
         True if valid 3-SAT and assignment satisfies all clauses.
     
-    TODO: Implement verification logic
+
     """
     
-    # 1. First verify this is actually 3-SAT (each clause has exactly 3 literals) 2. Normalize variables to 1..n 3. Evaluate CNF under assignment
-    clauses, num_literals = _validate_and_normalize_3sat(clauses)
-    if clauses == [] or num_literals == 0:
-        return False
-    A = [assignment.get(i + 1, False) for i in range(num_literals)]
-    # 3. Evaluate CNF under assignment
+    validate_sat_instance(clauses)
+    clauses, num_literals, var_mapping = normalize_sat(clauses)
+    A = sat_solution_to_assignment(assignment)
+    if len(A) != num_literals:
+        raise ValidationError("Assignment length does not match number of literals.")
     return _eval_cnf(clauses, A)
 
     
 
-
-def _validate_and_normalize_3sat(clauses: list[list[int]]) -> tuple[list[list[int]], int]:
+def sat_solution_to_assignment(solution: Any) -> list[bool]:
     """
-    Validate and normalize a 3-SAT instance (each clause has exactly 3 literals).
+    Convert a SAT solver solution to a list of variable assignments.
+    
+    Args:
+        solution: Solver solution (dict {var_id: True/False}).
+    
     Returns:
-        Tuple of (normalized_clauses, num_variables) where variables are 1 to num_num_variables. 
+        List of integers where positive means True and negative means False.
     """
-    # Validate: each clause is a list of exactly 3 ints
+    if isinstance(solution, list) and all(isinstance(x, bool) for x in solution):
+        return solution
 
-    for i, clause in enumerate(clauses):
-        if not isinstance(clause, list):
-            return [], 0
-        if len(clause) != 3:
-            return [], 0
-        for l in clause:
-            if not isinstance(l, int):
-                return [], 0
+    if not isinstance(solution, dict):
+        raise ValidationError("Solution must be a dictionary or a list.")
+    
+    assignment = []
+    for var_id, value in solution.items():
+        if value:
+            assignment.append(var_id)
+        else:
+            assignment.append(-var_id)
+    return assignment
 
-    # Find all variable indices (abs(literal))
-    var_set = set(abs(l) for clause in clauses for l in clause)
-    var_list = sorted(var_set)
-    var_map = {v: i+1 for i, v in enumerate(var_list)}  # map old var to 1..n
-
-    # Normalize: replace each literal l with sign(l) * new_var_index
-    normalized = []
-    for clause in clauses:
-        norm_clause = []
-        for l in clause:
-            v = abs(l)
-            sign = 1 if l > 0 else -1
-            norm_clause.append(sign * var_map[v])
-        normalized.append(norm_clause)
-
-    num_variables = len(var_list)
-    return normalized, num_variables
 
     
 def _eval_cnf(F: list[list[int]], A: list[bool]) -> bool:
