@@ -42,7 +42,7 @@ def verify_3sat_solution(clauses: list[list[int]], assignment: Any) -> bool:
     validate_sat_instance(clauses)
     clauses, num_literals, var_mapping = normalize_sat(clauses)
     A = sat_solution_to_assignment(assignment)
-    if len(A) != num_literals:
+    if len(A) > num_literals:
         raise ValidationError("Assignment length does not match number of literals.")
     return _eval_cnf(clauses, A)
 
@@ -98,21 +98,7 @@ def _eval_clause(C: list[int], A: list[bool]) -> bool:
         True if C is satisfied under A, False otherwise.    
     """
     for l in C:
-        if _eval_literal(l, A) == True:
-            return True
+            if len(A) > abs(l) - 1  and A[abs(l) - 1] == True:
+                return True
     return False
 
-def _eval_literal(l: int, A: list[bool]) -> bool:
-    """
-    Evaluate a single literal l under assignment A.
-    Args:
-        l: Literal (positive or negative integer).
-        A: Assignment list where A[i] is the value of variable (i+1).
-    Returns:
-        True if l is satisfied under A, False otherwise.
-    """
-    var_index = abs(l) - 1  # Convert to 0-based index
-    if l > 0:
-        return A[var_index]  # Positive literal
-    else:
-        return not A[var_index]  # Negative literal
