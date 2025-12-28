@@ -3,7 +3,7 @@ from typing import Any
 from .errors import ValidationError
 
 
-def _normalize_clauses(clauses: list[list[int]]) -> tuple[list[list[int]], int, dict[int, int]]:
+def normalize_sat(clauses: list[list[int]]) -> tuple[list[list[int]], int, dict[int, int]]:
     """
     Normalize clauses so variables are consecutively numbered from 1 to n.
     
@@ -36,9 +36,9 @@ def _normalize_clauses(clauses: list[list[int]]) -> tuple[list[list[int]], int, 
     return normalized_clauses, num_variables, var_mapping
 
 
-def validate_sat_instance(clauses: list[list[int]], num_variables: int = None) -> tuple[list[list[int]], int]:
+def validate_sat_instance(clauses: list[list[int]], num_variables: int = None) -> bool:
     """
-    Validate and normalize a SAT instance in CNF form.
+    Validate a SAT instance in CNF form.
     
     Args:
         clauses: List of clauses, where each clause is a list of literals.
@@ -46,7 +46,7 @@ def validate_sat_instance(clauses: list[list[int]], num_variables: int = None) -
         num_variables: Expected number of variables (optional).
     
     Returns:
-        Tuple of (normalized_clauses, num_variables) where variables are 1 to n.
+        True if the instance is valid.
     
     Raises:
         ValidationError: If the instance is invalid.
@@ -72,18 +72,17 @@ def validate_sat_instance(clauses: list[list[int]], num_variables: int = None) -
     if num_variables is not None and len(all_vars) != num_variables:
         raise ValidationError(f"Expected {num_variables} variables, found {len(all_vars)}")
     
-    # Normalize to consecutive variables 1, 2, ..., n
-    normalized_clauses, n, _ = _normalize_clauses(clauses)
+
     
-    return normalized_clauses, n
+    return True
 
 
-def validate_3sat_instance(clauses: list[list[int]]) -> tuple[list[list[int]], int]:
+def validate_3sat_instance(clauses: list[list[int]]) -> bool: 
     """
-    Validate and normalize a 3-SAT instance (each clause has exactly 3 literals).
+    Validate and  a 3-SAT instance (each clause has exactly 3 literals).
     
     Returns:
-        Tuple of (normalized_clauses, num_variables) where variables are 1 to n.
+        True if valid 3-SAT instance.
     
     Raises:
         ValidationError: If any clause doesn't have exactly 3 literals.
