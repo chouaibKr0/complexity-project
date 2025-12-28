@@ -14,7 +14,7 @@ This solver can either:
 
 from .base import BaseSolver, SolverResult
 from .sat_solver import SATSolver
-from ..utils.validation import validate_3sat_instance
+from ..utils.validation import validate_3sat_instance, normalize_sat
 from ..utils.timer import Timer
 
 
@@ -52,7 +52,8 @@ class ThreeSATSolver(BaseSolver):
             SolverResult with satisfiability and assignment.
         """
         # Validate and normalize input (variables become 1, 2, ..., n)
-        clauses, num_variables = validate_3sat_instance(clauses)
+        validate_3sat_instance(clauses)
+        clauses, num_variables, var_mapping = normalize_sat(clauses)
         
         self.stats["calls"] += 1
         
