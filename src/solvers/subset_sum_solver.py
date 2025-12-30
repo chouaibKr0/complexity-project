@@ -116,7 +116,6 @@ class SubsetSumSolver(BaseSolver):
                 return True, subset, nodes
         
         return False, None, nodes
-        raise NotImplementedError("Brute force Subset Sum solver not implemented")
     
     def _backtrack(self, numbers: list[int], target: int) -> tuple[bool, list | None, int]:
         """
@@ -187,7 +186,6 @@ class SubsetSumSolver(BaseSolver):
         
         found, subset = backtrack_helper(0, 0, [])
         return found, subset, nodes[0]
-        raise NotImplementedError("Backtracking Subset Sum solver not implemented")
     
     def _dynamic_programming(self, numbers: list[int], target: int) -> tuple[bool, list | None, int]:
         """
@@ -241,7 +239,6 @@ class SubsetSumSolver(BaseSolver):
         # Reconstruct the subset
         subset = self._reconstruct_subset(dp, numbers, target)
         return True, subset, nodes
-        raise NotImplementedError("Dynamic programming Subset Sum solver not implemented")
     
     # Helper methods
     
@@ -271,4 +268,4 @@ class SubsetSumSolver(BaseSolver):
             i -= 1
         
         return subset
-        pass
+    
