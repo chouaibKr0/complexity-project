@@ -14,8 +14,8 @@ class Experiment:
     algorithm: str
     parameters: dict = field(default_factory=dict)
     metrics: dict = field(default_factory=dict)
-    start_time: datetime = None
-    end_time: datetime = None
+    start_time: datetime | None = None
+    end_time: datetime | None = None
     status: str = "pending"  # pending, running, completed, failed
     notes: str = ""
     
@@ -23,7 +23,7 @@ class Experiment:
         self.start_time = datetime.now()
         self.status = "running"
     
-    def complete(self, metrics: dict = None):
+    def complete(self, metrics: dict | None = None):
         self.end_time = datetime.now()
         self.status = "completed"
         if metrics:
@@ -76,30 +76,30 @@ class ExperimentTracker:
         self.current = exp
         return exp
     
-    def start(self, name: str = None):
+    def start(self, name: str|None = None):
         """Start the current or named experiment."""
         exp = self._get_experiment(name)
         exp.start()
         self._log(exp, "started")
     
-    def log_metric(self, key: str, value: Any, name: str = None):
+    def log_metric(self, key: str, value: Any, name: str|None = None):
         """Log a metric to the current or named experiment."""
         exp = self._get_experiment(name)
         exp.metrics[key] = value
     
-    def complete(self, metrics: dict = None, name: str = None):
+    def complete(self, metrics: dict | None = None, name: str|None = None):
         """Mark experiment as completed."""
         exp = self._get_experiment(name)
         exp.complete(metrics)
         self._log(exp, "completed")
     
-    def fail(self, error: str, name: str = None):
+    def fail(self, error: str, name: str | None = None):
         """Mark experiment as failed."""
         exp = self._get_experiment(name)
         exp.fail(error)
         self._log(exp, "failed")
     
-    def _get_experiment(self, name: str = None) -> Experiment:
+    def _get_experiment(self, name: str | None = None) -> Experiment:
         if name:
             for exp in self.experiments:
                 if exp.name == name:

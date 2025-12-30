@@ -50,7 +50,7 @@ def setup_logging(log_level: str = "INFO", log_file: Path | None = None):
         logging.getLogger().addHandler(file_handler)
 
 
-def get_logger(name: str = None) -> structlog.BoundLogger:
+def get_logger(name: str | None = None) -> structlog.BoundLogger:
     """Get a structured logger instance."""
     return structlog.get_logger(name)
 
