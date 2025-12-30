@@ -17,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from src.utils.config import settings, ensure_directories
 from src.utils.logging import setup_logging, get_logger
-
+from src.utils.parsers import parse_dimacs_cnf
 
 def main():
     """Main entry point."""
@@ -59,45 +59,37 @@ def main():
     # print(f"Assignment: {result.solution}")
     # print(f"Time: {result.time_seconds:.4f}s")
 
-    # # Simple tester
-    #     # Example: Solve a simple SAT instance
-    # from src.solvers import ThreeSATSolver
-    # from src.verifiers import verify_3sat_solution
+    # Simple tester
+    # Example: Solve a simple SAT instance
+    from src.solvers import SATSolver
+    from src.verifiers import verify_sat_solution, verify_sat_solver_result
     # 
     # # (x1 OR NOT x2 OR x3) AND (x2 OR x3 OR NOT x1) AND (NOT x1 OR NOT x3 OR x2)
-    # n = 8
-    # clauses = [
-    #     [ 1,  2,  3], [-1,  4,  5], [ 2, -4,  6], [-2,  3,  7], [ 1, -3,  8],
-    #     [-1, -2,  4], [ 3, -5,  6], [-3,  4, -6], [ 2,  5, -7], [-2, -5,  7],
-    #     [ 1,  6, -8], [-1,  2, -6], [ 3,  7,  8], [-4, -7,  8], [ 1, -4,  7],
-    #     [-1,  3, -7], [-2,  4, -8], [ 2, -3, -4], [ 1,  5,  8], [-1, -5, -8],
-    #     [ 2,  4,  7], [-2, -4, -7], [ 3, -4,  5], [-3,  4,  6], [ 1, -2, -8],
-    #     [-1,  2,  7], [ 5,  6,  7], [-5, -6,  8], [ 4,  7, -8], [-4,  6,  8],
-    #     [ 2,  6,  8], [-2, -6, -8], [ 1,  7, -8], [-1, -7,  8],
-    # ]
+   
+    clauses = parse_dimacs_cnf("data/RTI_k3_n100_m429/RTI_k3_n100_m429_0.cnf").clauses
     # 
-    # for algorithm in ["brute_force", "backtrack", "dpll"]:
-    #     
-    #     solver = ThreeSATSolver(algorithm=algorithm)
-    #     result = solver.solve(clauses) 
-    #     print(f"Satisfiable: {result.satisfiable}")
-    #     print(f"Assignment: {result.solution}")
-    #     print(f"Time: {result.time_seconds:.4f}s")
-    #     print(f"Algorithm: {result.algorithm}")
-    #     print(f"Nodes Explored: {result.nodes_explored}")
-    #     print("-" * 40)
-    #     print("Verify the solution")
-    #     print("-" * 40)
-    #     
-    #     if result.satisfiable is False:
-    #         print("Cannot verify unsatisfiability with no assignment.")
-    #     else:
-    #         is_valid = verify_3sat_solution(clauses, result.solution)
-    #         print(f"Solution valid: {is_valid}")
-    #     print("=" * 60)
+    for algorithm in ["dpll", "backtrack","brute_force"]:
+        
+        solver = SATSolver(algorithm=algorithm)
+        result = solver.solve(clauses) 
+        print(f"Satisfiable: {result.satisfiable}")
+        print(f"Assignment: {result.solution}")
+        print(f"Time: {result.time_seconds:.4f}s")
+        print(f"Algorithm: {result.algorithm}")
+        print(f"Nodes Explored: {result.nodes_explored}")
+        print("-" * 40)
+        print("Verify the solution")
+        print("-" * 40)
+        
+        if result.satisfiable is False:
+            print("Cannot verify unsatisfiability with no assignment.")
+        else:
+            is_valid = verify_sat_solution(clauses, result.solution)
+            print(f"Solution valid: {is_valid}")
+        print("=" * 60)
     
-    from src.cli import app
-    app()  # This launches the Typer CLI
+    #from src.cli import app
+    #app()  # This launches the Typer CLI
 
 
 
