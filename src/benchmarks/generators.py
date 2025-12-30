@@ -6,15 +6,15 @@ Generate random instances for benchmarking the solvers.
 import random
 import numpy as np
 from typing import Tuple
-
+from utils.parsers import SATInstance, SubsetSumInstance
 
 def generate_random_sat(
     num_variables: int,
     num_clauses: int,
     min_clause_size: int = 1,
     max_clause_size: int = 5,
-    seed: int = None
-) -> list[list[int]]:
+    seed: int = 42
+) -> SATInstance:
     """
     Generate a random SAT instance in CNF form.
     
@@ -39,14 +39,14 @@ def generate_random_sat(
         vars_ = random.sample(range(1, num_variables + 1), k)
         clause = [v if random.choice([True, False]) else -v for v in vars_]
         clauses.append(clause)
-    return clauses
+    return SATInstance(clauses=clauses, num_variables=num_variables, num_clauses=num_clauses)
 
 
 def generate_random_3sat(
     num_variables: int,
     num_clauses: int,
-    seed: int = None
-) -> list[list[int]]:
+    seed: int = 42
+) -> SATInstance:
     """
     Generate a random 3-SAT instance.
     
@@ -73,15 +73,15 @@ def generate_random_3sat(
         vars_ = random.sample(range(1, num_variables + 1), 3)
         clause = [v if random.choice([True, False]) else -v for v in vars_]
         clauses.append(clause)
-    return clauses
+    return SATInstance(clauses=clauses, num_variables=num_variables, num_clauses=num_clauses)
 
 
 def generate_random_subset_sum(
     num_elements: int,
     max_value: int = 1000,
-    satisfiable: bool = None,
-    seed: int = None
-) -> Tuple[list[int], int]:
+    satisfiable: bool|None = None,
+    seed: int = 42
+) -> SubsetSumInstance:
     """
     Generate a random Subset Sum instance.
     
@@ -113,10 +113,10 @@ def generate_random_subset_sum(
     else:
         # Random target
         target = random.randint(1, sum(numbers))
-    return numbers, target
+    return SubsetSumInstance(numbers=numbers, target=target)
 
 
-def generate_hard_sat_instance(num_variables: int, seed: int = None) -> list[list[int]]:
+def generate_hard_sat_instance(num_variables: int, seed: int = 42) -> SATInstance:
     """
     Generate a 3-SAT instance near the satisfiability threshold (hard region).
     For 3-SAT, the hard region is around clause/variable ratio of 4.26.
@@ -133,4 +133,4 @@ def generate_hard_sat_instance(num_variables: int, seed: int = None) -> list[lis
         vars_ = random.sample(range(1, num_variables + 1), 3)
         clause = [v if random.choice([True, False]) else -v for v in vars_]
         clauses.append(clause)
-    return clauses
+    return SATInstance(clauses=clauses, num_variables=num_variables, num_clauses=num_clauses)
