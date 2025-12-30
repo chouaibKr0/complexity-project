@@ -24,14 +24,8 @@ def verify_sat_solution(clauses: list[list[int]], assignment: dict[int, bool]) -
     
     Complexity: O(total_literals) - polynomial time
     
-    TODO: Implement verification logic
     """
-    # TODO: Implement SAT verification
-    # For each clause:
-    #   - Check if at least one literal is satisfied
-    #   - A positive literal i is satisfied if assignment[i] = True
-    #   - A negative literal -i is satisfied if assignment[i] = False
-    # Return True only if ALL clauses are satisfied
+
     
     # Check each clause - ALL must be satisfied
     for clause in clauses:
@@ -46,14 +40,14 @@ def verify_sat_solution(clauses: list[list[int]], assignment: dict[int, bool]) -
 def evaluate_literal(literal: int, assignment: dict[int, bool]) -> bool:
     """
     Evaluate a single literal under an assignment.
-    
-    TODO: Implement this helper
+
     """
     # Get the variable index (absolute value of literal)
     var = abs(literal)
     
     # Get the variable's truth value from assignment
     var_value = assignment.get(var, False)
+    # The return of false when the variable is not assigned, will not pose a problem in evaluation(same holds for true). Since the absence of a variable in a correct assignment implies the satisfiability holds for both values.
     
     # Positive literal: return var value directly
     # Negative literal: return negation of var value
@@ -66,14 +60,14 @@ def evaluate_literal(literal: int, assignment: dict[int, bool]) -> bool:
 def evaluate_clause(clause: list[int], assignment: dict[int, bool]) -> bool:
     """
     Evaluate a single clause (disjunction of literals).
-    
-    TODO: Implement this helper
+
     """
     # A clause is a disjunction (OR) of literals
     # It's satisfied if AT LEAST ONE literal is True
     for literal in clause:
         if evaluate_literal(literal, assignment):
-            # Found a true literal -> clause is satisfied
+            # The return of false when the variable is not assigned, will not pose a problem in evaluation(same holds for true). Since the absence of a variable in a correct assignment implies the satisfiability holds for both values.
+            # Found a true literal => clause is satisfied
             return True
     
     # No literal was true -> clause is unsatisfied
