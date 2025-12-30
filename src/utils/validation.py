@@ -36,7 +36,7 @@ def normalize_sat(clauses: list[list[int]]) -> tuple[list[list[int]], int, dict[
     return normalized_clauses, num_variables, var_mapping
 
 
-def validate_sat_instance(clauses: list[list[int]], num_variables: int = None) -> bool:
+def validate_sat_instance(clauses: list[list[int]], num_variables: int |None = None) -> bool:
     """
     Validate a SAT instance in CNF form.
     

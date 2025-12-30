@@ -10,14 +10,14 @@ Algorithms to implement:
 2. Backtracking - Basic backtracking with pruning
 3. DPLL - Davis-Putnam-Logemann-Loveland algorithm
 
-TODO: Implement the solving algorithms
 """
+
 import time
 from typing import Any
 import numpy as np
 
 from .base import BaseSolver, SolverResult
-from ..utils.validation import validate_sat_instance
+from ..utils.validation import validate_sat_instance, normalize_sat
 from ..utils.timer import Timer
 
 
@@ -45,7 +45,7 @@ class SATSolver(BaseSolver):
         super().__init__(name=f"SAT-{algorithm}")
         self.algorithm = algorithm
     
-    def solve(self, clauses: list[list[int]], num_variables: int = None) -> SolverResult:
+    def solve(self, clauses: list[list[int]], num_variables: int | None = None) -> SolverResult:
         """
         Solve the SAT instance.
         
@@ -56,8 +56,10 @@ class SATSolver(BaseSolver):
         Returns:
             SolverResult with satisfiability and assignment.
         """
+
         # Validate and normalize input (variables become 1, 2, ..., n)
-        clauses, num_variables = validate_sat_instance(clauses, num_variables)
+        validate_sat_instance(clauses, num_variables)
+        clauses, num_variables, var_mapping = normalize_sat(clauses)
         
         self.stats["calls"] += 1
         nodes = 0
@@ -87,7 +89,6 @@ class SATSolver(BaseSolver):
         """
         Brute force: enumerate all 2^n assignments.
         
-        TODO: Implement this method
         - Generate all possible truth assignments
         - Check each assignment against all clauses
         - Return first satisfying assignment found
@@ -95,7 +96,6 @@ class SATSolver(BaseSolver):
         Returns:
             (is_satisfiable, assignment_dict, nodes_explored)
         """
-        # TODO: Implement brute force algorithm
         nodes = 0
         
         # Try all 2^n possible assignments (from 0 to 2^n - 1)
@@ -119,8 +119,7 @@ class SATSolver(BaseSolver):
     def _backtrack(self, clauses: list[list[int]], n: int) -> tuple[bool, dict | None, int]:
         """
         Backtracking with early termination.
-        
-        TODO: Implement this method
+
         - Assign variables one by one
         - Prune when a clause becomes unsatisfiable
         - Backtrack when stuck
@@ -128,7 +127,6 @@ class SATSolver(BaseSolver):
         Returns:
             (is_satisfiable, assignment_dict, nodes_explored)
         """
-        # TODO: Implement backtracking algorithm
         self._nodes = 0  # Counter for nodes explored
         
         def backtrack_helper(assignment: dict[int, bool], var: int) -> dict[int, bool] | None:
@@ -176,7 +174,6 @@ class SATSolver(BaseSolver):
         """
         DPLL algorithm with unit propagation and pure literal elimination.
         
-        TODO: Implement this method
         Key steps:
         1. Unit propagation: if a clause has one literal, it must be true
         2. Pure literal elimination: if a variable appears with one polarity, set it
@@ -185,7 +182,7 @@ class SATSolver(BaseSolver):
         Returns:
             (is_satisfiable, assignment_dict, nodes_explored)
         """
-        # TODO: Implement DPLL algorithm
+
         self._nodes = 0
         
         def dpll_helper(clauses: list[list[int]], assignment: dict[int, bool]) -> dict[int, bool] | None:
@@ -249,6 +246,7 @@ class SATSolver(BaseSolver):
             # Try False
             new_assignment = assignment.copy()
             new_assignment[unassigned] = False
+            # Simplify clauses with new assignment
             simplified = self._simplify_clauses(clauses, unassigned, False)
             result = dpll_helper(simplified, new_assignment)
             return result
@@ -265,7 +263,6 @@ class SATSolver(BaseSolver):
         Returns:
             True if satisfied, False if unsatisfied, None if undetermined
         """
-        # TODO: Implement clause evaluation
         has_unassigned = False
         
         for literal in clause:
@@ -294,7 +291,6 @@ class SATSolver(BaseSolver):
         Returns:
             True if all clauses satisfied, False if any unsatisfied, None if undetermined
         """
-        # TODO: Implement formula evaluation
         all_satisfied = True
         
         for clause in clauses:
@@ -317,7 +313,7 @@ class SATSolver(BaseSolver):
         Returns:
             (simplified_clauses, updated_assignment, is_conflict)
         """
-        # TODO: Implement unit propagation
+
         assignment = assignment.copy()
         clauses = [c[:] for c in clauses]  # Deep copy clauses
         
@@ -364,7 +360,6 @@ class SATSolver(BaseSolver):
     
     def _find_pure_literals(self, clauses: list[list[int]], assignment: dict[int, bool]) -> dict[int, bool]:
         """Find all pure literals (appear with only one polarity)."""
-        # TODO: Implement pure literal finding
         positive = set()  # Variables appearing positively
         negative = set()  # Variables appearing negatively
         
