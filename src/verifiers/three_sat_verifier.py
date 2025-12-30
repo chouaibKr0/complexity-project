@@ -5,14 +5,13 @@ Verifies that a given assignment satisfies a 3-SAT formula.
 Same as SAT verifier but also checks that each clause has exactly 3 literals.
 """
 from typing import Any
-
 from src.solvers.base import SolverResult
 from src.utils.errors import ValidationError
 from src.utils.validation import validate_sat_instance, normalize_sat
 from .sat_verifier import verify_sat_solution
 
 
-def verify_3sat_solver_result(clauses: list[list[int]], result: SolverResult) -> bool:
+def verify_3sat_solver_result(clauses: list[list[int]], result: SolverResult) -> bool|None:
     """
     Verify the result from a 3-SAT solver.
     Args:
@@ -23,6 +22,9 @@ def verify_3sat_solver_result(clauses: list[list[int]], result: SolverResult) ->
     """
     if not isinstance(result, SolverResult):
         raise ValidationError("Result must be a SolverResult instance.")
+    if result.satisfiable is None:
+        # Verifier cannot determine unsatisfiability
+        return None
     return verify_3sat_solution(clauses, result.solution) == result.satisfiable
 
 def verify_3sat_solution(clauses: list[list[int]], assignment: Any) -> bool:
@@ -41,10 +43,29 @@ def verify_3sat_solution(clauses: list[list[int]], assignment: Any) -> bool:
     
     validate_sat_instance(clauses)
     clauses, num_literals, var_mapping = normalize_sat(clauses)
-    A = sat_solution_to_assignment(assignment)
+    if assignment is not None:
+        A = sat_solution_to_assignment(assignment) 
+    else:
+        raise ValidationError("Validation impossible with no assignment provided.")
     if len(A) > num_literals:
         raise ValidationError("Assignment length does not match number of literals.")
-    return _eval_cnf(clauses, A)
+        # If solver returns partial model (e.g., DPLL), fill missing vars arbitrarily
+    for v in range(1, num_literals + 1):
+        assignment.setdefault(v, False)
+
+    # Evaluate CNF correctly (handles negative literals)
+    for C in clauses:
+        ok_clause = False
+        for l in C:
+            v = abs(l)
+            val = assignment[v]
+            lit_true = val if l > 0 else (not val)
+            if lit_true:
+                ok_clause = True
+                break
+        if not ok_clause:
+            return False
+    return True
 
     
 
