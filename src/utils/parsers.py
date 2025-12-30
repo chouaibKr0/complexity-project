@@ -38,7 +38,7 @@ def parse_dimacs_cnf(file_path: str | Path) -> SATInstance:
     with open(file_path, 'r') as f:
         for line in f:
             line = line.strip()
-            if not line or line.startswith('c'):
+            if not line or line.startswith('c') or line.startswith('%') or line.startswith('0'):
                 continue
             if line.startswith('p'):
                 parts = line.split()
