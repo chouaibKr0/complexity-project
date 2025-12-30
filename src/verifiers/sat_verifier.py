@@ -7,6 +7,29 @@ Verification runs in polynomial time O(n * m) where n = variables, m = clauses.
 This demonstrates that SAT is in NP: solutions can be verified efficiently.
 """
 from typing import Any
+from src.solvers.base import SolverResult
+from src.utils.errors import ValidationError
+
+def verify_sat_solver_result(clauses: list[list[int]], result: SolverResult) -> bool|None:
+    """
+    Verify the result from a SAT solver.
+    Args:
+        clauses: CNF formula 
+        result: SolverResult from the SAT solver.
+    Returns:
+        True if the solver result is correct, False otherwise.
+    """
+    if not isinstance(result, SolverResult):
+        raise ValidationError("Result must be a SolverResult instance.")
+    solution = {}
+    if result.satisfiable is None:
+        # Verifier cannot determine unsatisfiability
+        return None
+        try:
+            solution: dict[int, bool] = result.solution
+        except Exception:
+            raise ValidationError("Solution must be a dictionary of variable assignments to verify.")
+    return verify_sat_solution(clauses, solution) == result.satisfiable
 
 
 def verify_sat_solution(clauses: list[list[int]], assignment: dict[int, bool]) -> bool:
