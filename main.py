@@ -61,12 +61,12 @@ def main():
 
     # Simple tester
     # Example: Solve a simple SAT instance
-    from src.solvers import SATSolver
-    from src.verifiers import verify_sat_solution, verify_sat_solver_result
+    from src.solvers import SATSolver, ThreeSATSolver
+    from src.verifiers import verify_sat_solution, verify_sat_solver_result, verify_3sat_solution, verify_3sat_solver_result
     # 
     # # (x1 OR NOT x2 OR x3) AND (x2 OR x3 OR NOT x1) AND (NOT x1 OR NOT x3 OR x2)
    
-    clauses = parse_dimacs_cnf("data/RTI_k3_n100_m429/RTI_k3_n100_m429_0.cnf").clauses
+    clauses = parse_dimacs_cnf("data/uf20-91/uf20-01.cnf").clauses
     # 
     for algorithm in ["dpll", "backtrack","brute_force"]:
         
@@ -84,9 +84,14 @@ def main():
         if result.satisfiable is False:
             print("Cannot verify unsatisfiability with no assignment.")
         else:
-            is_valid = verify_sat_solution(clauses, result.solution)
-            print(f"Solution valid: {is_valid}")
-        print("=" * 60)
+            is_correct = verify_sat_solver_result(clauses, result)
+            print(f"Solver result correct: {is_correct}")
+            print('='*60)
+            # is_valid = verify_sat_solution(clauses, result.solution)
+            # print(f"Solution valid: {is_valid}")
+            # print('='*60)
+
+
     
     #from src.cli import app
     #app()  # This launches the Typer CLI
