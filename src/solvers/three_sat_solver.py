@@ -110,7 +110,7 @@ class ThreeSATSolver(BaseSolver):
 
     def _eval_cnf(self,F: list[list[int]], A: list[bool]) -> bool:
         """
-        Evaluate CNF formula F under assignment A.
+        Evaluate CNF formula F under assignment A. Brute-force helper.
         Args:
             F: CNF formula (list of clauses).
             A: Assignment list where A[i] is the value of variable (i+1).
@@ -124,7 +124,7 @@ class ThreeSATSolver(BaseSolver):
 
     def _eval_clause(self, C: list[int], A: list[bool]) -> bool:
         """
-        Evaluate a single clause C under assignment A.
+        Evaluate a single clause C under assignment A. Brute-force helper.
         Args:
             C: Clause (list of literals).
             A: Assignment list where A[i] is the value of variable (i+1).
@@ -138,7 +138,7 @@ class ThreeSATSolver(BaseSolver):
     
     def _eval_literal(self, l: int, A: list[bool]) -> bool:
         """
-        Evaluate a single literal l under assignment A.
+        Evaluate a single literal l under assignment A. Brute-force helper.
         Args:
             l: Literal (positive or negative integer).
             A: Assignment list where A[i] is the value of variable (i+1).
@@ -194,7 +194,7 @@ class ThreeSATSolver(BaseSolver):
 
     def _exists_falsified_clause(self, F: list[list[int]], P: dict) -> bool:
         """
-        Check if there exists a falsified clause under partial assignment P.
+        Check if there exists a falsified clause under partial assignment P. Backtracking helper.
         Args:
             F: CNF formula (list of clauses).
             P: Partial assignment (some variables assigned).
@@ -208,7 +208,7 @@ class ThreeSATSolver(BaseSolver):
 
     def _clause_status(self, C: list[int], P: dict) -> int:
         """
-        Determine the status of clause C under partial assignment P.
+        Determine the status of clause C under partial assignment P. Backtracking helper.
         Args:
             C: Clause (list of literals).
             P: Partial assignment (some variables assigned).
@@ -228,7 +228,7 @@ class ThreeSATSolver(BaseSolver):
     
     def _select_unassigned_var(self, N: int, P: dict) -> int:
         """
-        Select an unassigned variable.
+        Select an unassigned variable. Backtracking helper.
         Args:
             N: Number of variables.
             P: Partial assignment (some variables assigned).
@@ -361,7 +361,7 @@ class ThreeSATSolver(BaseSolver):
 
     def _exists_pure_literal(self, F: list[list[int]], P: dict, N: int) -> int | None:
         """
-        Check for existence of a pure literal in F under partial assignment P.
+        Check for existence of a pure literal in F under partial assignment P. DPLL helper.
         Args:
             F: Current formula (list of clauses).
             P: Current partial assignment.
@@ -392,7 +392,7 @@ class ThreeSATSolver(BaseSolver):
 
     def _simplify(self, F: list[list[int]], P: dict) -> list[list[int]]:
         """
-        Simplify formula F under partial assignment P.
+        Simplify formula F under partial assignment P. DPLL helper.
         Args:
             F: Current formula (list of clauses).
             P: Current partial assignment.
@@ -436,7 +436,7 @@ class ThreeSATSolver(BaseSolver):
 
     def _has_empty_clause(self, F: list[list[int]]) -> bool:
         """
-        Check if there exists an empty clause in F.
+        Check if there exists an empty clause in F. DPLL helper.
         Args:
             F: Current formula (list of clauses).
         Returns:
@@ -447,7 +447,7 @@ class ThreeSATSolver(BaseSolver):
 
     def _find_unit_clause(self, F: list[list[int]], P: dict) -> list[int] | None:
         """
-        Find a unit clause in F.
+        Find a unit clause in F. DPLL helper.
         Args:
             F: Current formula (list of clauses).
             P: Current partial assignment.
@@ -462,7 +462,7 @@ class ThreeSATSolver(BaseSolver):
 
     def _choose_branch_var(self, F: list[list[int]], P: dict) -> int | None:
         """
-        Simple heuristic: Pick first variable from first clause.
+        Simple heuristic: Pick first variable from first clause. DPLL helper.
         Args:
             F: Current formula (list of clauses).
             P: Current partial assignment.
@@ -476,6 +476,13 @@ class ThreeSATSolver(BaseSolver):
 
 
     def _no_clauses_left(self, F):
+        """
+        Check if no clauses are left in F. DPLL helper.
+        Args:
+            F: Current formula (list of clauses).
+        Returns:
+            True if no clauses left, False otherwise.
+        """
         return len(F) == 0
 
 
