@@ -6,7 +6,7 @@ Generate random instances for benchmarking the solvers.
 import random
 import numpy as np
 from typing import Tuple
-from utils.parsers import SATInstance, SubsetSumInstance
+from src.utils.parsers import SATInstance, SubsetSumInstance
 
 def generate_random_sat(
     num_variables: int,

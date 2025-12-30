@@ -62,6 +62,10 @@ def parse_dimacs_cnf(file_path: str | Path) -> SATInstance:
 
 def write_dimacs_cnf(instance: SATInstance, file_path: str | Path):
     """Write a SAT instance to DIMACS CNF format."""
+    if not hasattr(instance, "clauses"):
+        raise TypeError("write_dimacs_cnf expects a SATInstance, not other type.") 
+    if not isinstance(instance.clauses, list):
+        raise TypeError("write_dimacs_cnf expects clauses to be a list.")
     with open(file_path, 'w') as f:
         f.write(f"c {instance.name}\n")
         f.write(f"p cnf {instance.num_variables} {instance.num_clauses}\n")
