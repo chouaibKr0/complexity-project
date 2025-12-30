@@ -11,7 +11,6 @@ Algorithms to implement:
 2. Backtracking - With pruning
 3. Dynamic Programming - O(n*T) pseudo-polynomial time
 
-TODO: Implement the solving algorithms
 """
 import time
 from typing import Any
