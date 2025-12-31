@@ -1,0 +1,46 @@
+{
+  "problem_type": "3sat",
+  "algorithm": "dpll",
+  "instance_name": "3sat_n25",
+  "instance_size": {
+    "variables": 25,
+    "clauses": 100,
+    "numbers": 0
+  },
+  "is_satisfiable": true,
+  "solution": {
+    "15": false,
+    "20": true,
+    "23": false,
+    "25": true,
+    "24": true,
+    "7": true,
+    "19": false,
+    "12": false,
+    "21": true,
+    "14": true,
+    "16": false,
+    "22": true,
+    "4": false,
+    "11": true,
+    "18": false,
+    "2": false,
+    "5": false,
+    "8": false,
+    "3": false,
+    "1": false,
+    "13": true,
+    "10": true,
+    "9": true,
+    "6": false,
+    "17": false
+  },
+  "time_seconds": 0.00921133599968016,
+  "nodes_explored": 42,
+  "memory_mb": null,
+  "timestamp": "2025-12-31T18:06:12.414454",
+  "metadata": {
+    "solution_valid": true,
+    "size": 25
+  }
+}

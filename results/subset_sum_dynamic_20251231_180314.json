@@ -1,0 +1,46 @@
+{
+  "problem_type": "subset_sum",
+  "algorithm": "dynamic",
+  "instance_name": "subset_sum_n30",
+  "instance_size": {
+    "variables": 0,
+    "clauses": 0,
+    "numbers": 30
+  },
+  "is_satisfiable": true,
+  "solution": [
+    31,
+    44,
+    24,
+    36,
+    9,
+    45,
+    10,
+    35,
+    31,
+    42,
+    48,
+    9,
+    21,
+    44,
+    30,
+    45,
+    36,
+    10,
+    47,
+    20,
+    9,
+    18,
+    21,
+    12,
+    33
+  ],
+  "time_seconds": 0.019214479999845935,
+  "nodes_explored": 21330,
+  "memory_mb": null,
+  "timestamp": "2025-12-31T18:03:14.679737",
+  "metadata": {
+    "solution_valid": true,
+    "size": 30
+  }
+}

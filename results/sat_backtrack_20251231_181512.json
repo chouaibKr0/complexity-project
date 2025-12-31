@@ -1,0 +1,20 @@
+{
+  "problem_type": "sat",
+  "algorithm": "backtrack",
+  "instance_name": "sat_n20",
+  "instance_size": {
+    "variables": 20,
+    "clauses": 80,
+    "numbers": 0
+  },
+  "is_satisfiable": false,
+  "solution": null,
+  "time_seconds": 0.00030084900026849937,
+  "nodes_explored": 23,
+  "memory_mb": null,
+  "timestamp": "2025-12-31T18:15:12.944317",
+  "metadata": {
+    "solution_valid": null,
+    "size": 20
+  }
+}
