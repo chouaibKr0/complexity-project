@@ -30,6 +30,7 @@ class ExperimentResult:
     is_satisfiable: Optional[bool]
     solution: Optional[Any]
     time_seconds: float
+    nodes_explored: Optional[int] = None
     memory_mb: Optional[float] = None
     timestamp: Optional[str] = None
     metadata: Dict[str, Any] = None
