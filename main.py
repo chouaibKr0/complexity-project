@@ -27,6 +27,7 @@ def main():
     from src.utils.parsers import write_dimacs_cnf, write_subset_sum_file, SATInstance, SubsetSumInstance
     from src.utils.logging import setup_logging, get_logger
     from src.utils.config import settings, ensure_directories
+    from datetime import datetime
     # Setup
     ensure_directories()
     setup_logging(settings.log_level)
@@ -45,18 +46,18 @@ def main():
     print("=" * 60)
 
     # 1. Generate instances and write to files
-    sat_instance = generate_random_sat(num_variables=20, num_clauses=91)
-    sat_path = "data/demo_sat.cnf"
+    sat_instance = generate_random_sat(num_variables=20, num_clauses=91, seed=None)
+    sat_path = settings.paths.data_dir / f"generated_sat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.cnf"
     write_dimacs_cnf(sat_instance, sat_path)
     progress.log(f"SAT instance written to {sat_path}", style="bold green")
 
-    three_sat_instance = generate_random_3sat(num_variables=20, num_clauses=91)
-    three_sat_path = "data/demo_3sat.cnf"
+    three_sat_instance = generate_random_3sat(num_variables=20, num_clauses=91, seed=None)
+    three_sat_path = settings.paths.data_dir / f"generated_3sat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.cnf"
     write_dimacs_cnf(three_sat_instance, three_sat_path)
     progress.log(f"3-SAT instance written to {three_sat_path}", style="bold green")
 
-    subset_sum_instance = generate_random_subset_sum(num_elements=10, max_value=50)
-    subset_sum_path = "data/demo_subset_sum.txt"
+    subset_sum_instance = generate_random_subset_sum(num_elements=10, max_value=50, seed=None)
+    subset_sum_path = settings.paths.data_dir / f"generated_subset_sum_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
     write_subset_sum_file(subset_sum_instance, subset_sum_path)
     progress.log(f"Subset Sum instance written to {subset_sum_path}", style="bold green")
 
@@ -64,12 +65,11 @@ def main():
     with progress.task("Reducing SAT to 3-SAT"):
         reduced_3sat = reduce_sat_to_3sat(sat_instance.clauses, sat_instance.num_variables)
         reduced_sat_instance = SATInstance(clauses=reduced_3sat.reduced_instance,num_variables=reduced_3sat.reduced_variables, num_clauses=reduced_3sat.reduced_clauses)
-        write_dimacs_cnf(reduced_sat_instance, "data/demo_sat_to_3sat.cnf")
+        write_dimacs_cnf(reduced_sat_instance, sat_path.parent / f"{sat_path.stem}_to_3sat.cnf")
     with progress.task("Reducing 3-SAT to Subset Sum"):
         reduced_subsum = reduce_3sat_to_subset_sum(three_sat_instance.clauses, three_sat_instance.num_variables)
         reduced_3sat_instance = SubsetSumInstance(numbers=reduced_subsum.numbers, target=reduced_subsum.target)
-        write_subset_sum_file(reduced_3sat_instance, "data/demo_3sat_to_subsum.txt")
-
+        write_subset_sum_file(reduced_3sat_instance, three_sat_path.parent / f"{three_sat_path.stem}_to_subsum.txt")
     # 3. Run solvers on sample problems (with experiment tracking)
     sample_problems = [
         ("sat", sat_instance, SATSolver, ["dpll", "backtrack"]),
@@ -132,19 +132,19 @@ def main():
             progress.log(f"Result for {problem_type} ({algo}) saved.", style="bold blue")
 
     # 4. Save batch results and experiment summary
-    serializer.save_batch(results, "demo_batch_results.json")
-    tracker.save_summary("demo_experiment_summary.json")
+    serializer.save_batch(results, f"experiment_batch_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
+    tracker.save_summary(f"experiment_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
     progress.log("Batch results and experiment summary saved.", style="bold green")
 
     # 5. Plot benchmarks (example)
     with progress.task("Plotting complexity curves"):
-        plot_complexity(pd.DataFrame([r for r in results if r.problem_type == "sat"]), output_dir=Path("results/plots"))
-        plot_complexity(pd.DataFrame([r for r in results if r.problem_type == "3sat"]), output_dir=Path("results/plots"))
-        plot_complexity(pd.DataFrame([r for r in results if r.problem_type == "subset_sum"]), output_dir=Path("results/plots"))
-    progress.log("Plots saved to results/plots.", style="bold magenta")
+        plot_complexity(pd.DataFrame([r for r in results if r.problem_type == "sat"]), output_dir=settings.paths.plots_dir)
+        plot_complexity(pd.DataFrame([r for r in results if r.problem_type == "3sat"]), output_dir=settings.paths.plots_dir)
+        plot_complexity(pd.DataFrame([r for r in results if r.problem_type == "subset_sum"]), output_dir=settings.paths.plots_dir)
+    progress.log(f"Plots saved to {settings.paths.plots_dir}.", style="bold magenta")
 
     print("=" * 60)
-    print("Demo complete. See results, logs, and plots in the results/ directory.")
+    print(f"Demo complete. See results, logs, and plots in the {settings.paths.results_dir} directory.")
     print("=" * 60)
 
 if __name__ == "__main__":
