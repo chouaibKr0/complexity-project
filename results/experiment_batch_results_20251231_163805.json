@@ -1,0 +1,866 @@
+[
+  {
+    "problem_type": "sat",
+    "algorithm": "dpll",
+    "instance_name": "sat_n10",
+    "instance_size": {
+      "variables": 10,
+      "clauses": 40,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.000050380000175209716,
+    "nodes_explored": 1,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.888818",
+    "metadata": {
+      "solution_valid": null,
+      "size": 10
+    }
+  },
+  {
+    "problem_type": "sat",
+    "algorithm": "backtrack",
+    "instance_name": "sat_n10",
+    "instance_size": {
+      "variables": 10,
+      "clauses": 40,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.0012200010005471995,
+    "nodes_explored": 57,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.892479",
+    "metadata": {
+      "solution_valid": null,
+      "size": 10
+    }
+  },
+  {
+    "problem_type": "sat",
+    "algorithm": "dpll",
+    "instance_name": "sat_n15",
+    "instance_size": {
+      "variables": 15,
+      "clauses": 60,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.00006291499994404148,
+    "nodes_explored": 1,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.896451",
+    "metadata": {
+      "solution_valid": null,
+      "size": 15
+    }
+  },
+  {
+    "problem_type": "sat",
+    "algorithm": "backtrack",
+    "instance_name": "sat_n15",
+    "instance_size": {
+      "variables": 15,
+      "clauses": 60,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.0033123029988928465,
+    "nodes_explored": 129,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.902349",
+    "metadata": {
+      "solution_valid": null,
+      "size": 15
+    }
+  },
+  {
+    "problem_type": "sat",
+    "algorithm": "dpll",
+    "instance_name": "sat_n20",
+    "instance_size": {
+      "variables": 20,
+      "clauses": 80,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.00012443500054359902,
+    "nodes_explored": 1,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.906811",
+    "metadata": {
+      "solution_valid": null,
+      "size": 20
+    }
+  },
+  {
+    "problem_type": "sat",
+    "algorithm": "backtrack",
+    "instance_name": "sat_n20",
+    "instance_size": {
+      "variables": 20,
+      "clauses": 80,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.003909945000486914,
+    "nodes_explored": 207,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.913012",
+    "metadata": {
+      "solution_valid": null,
+      "size": 20
+    }
+  },
+  {
+    "problem_type": "sat",
+    "algorithm": "dpll",
+    "instance_name": "sat_n25",
+    "instance_size": {
+      "variables": 25,
+      "clauses": 100,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.00010407899935671594,
+    "nodes_explored": 1,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.917617",
+    "metadata": {
+      "solution_valid": null,
+      "size": 25
+    }
+  },
+  {
+    "problem_type": "sat",
+    "algorithm": "backtrack",
+    "instance_name": "sat_n25",
+    "instance_size": {
+      "variables": 25,
+      "clauses": 100,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.000378972999897087,
+    "nodes_explored": 7,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.920314",
+    "metadata": {
+      "solution_valid": null,
+      "size": 25
+    }
+  },
+  {
+    "problem_type": "sat",
+    "algorithm": "dpll",
+    "instance_name": "sat_n30",
+    "instance_size": {
+      "variables": 30,
+      "clauses": 120,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.00003804100015258882,
+    "nodes_explored": 1,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.923328",
+    "metadata": {
+      "solution_valid": null,
+      "size": 30
+    }
+  },
+  {
+    "problem_type": "sat",
+    "algorithm": "backtrack",
+    "instance_name": "sat_n30",
+    "instance_size": {
+      "variables": 30,
+      "clauses": 120,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.0011881200007337611,
+    "nodes_explored": 43,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.926387",
+    "metadata": {
+      "solution_valid": null,
+      "size": 30
+    }
+  },
+  {
+    "problem_type": "3sat",
+    "algorithm": "dpll",
+    "instance_name": "3sat_n10",
+    "instance_size": {
+      "variables": 10,
+      "clauses": 40,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.0012807540006178897,
+    "nodes_explored": 13,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.932604",
+    "metadata": {
+      "solution_valid": null,
+      "size": 10
+    }
+  },
+  {
+    "problem_type": "3sat",
+    "algorithm": "backtrack",
+    "instance_name": "3sat_n10",
+    "instance_size": {
+      "variables": 10,
+      "clauses": 40,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.002869048999855295,
+    "nodes_explored": 245,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.937418",
+    "metadata": {
+      "solution_valid": null,
+      "size": 10
+    }
+  },
+  {
+    "problem_type": "3sat",
+    "algorithm": "dpll",
+    "instance_name": "3sat_n15",
+    "instance_size": {
+      "variables": 15,
+      "clauses": 60,
+      "numbers": 0
+    },
+    "is_satisfiable": true,
+    "solution": {
+      "13": false,
+      "9": true,
+      "5": false,
+      "4": false,
+      "7": true,
+      "1": true,
+      "11": true,
+      "2": true,
+      "12": false,
+      "10": false,
+      "8": true,
+      "3": true,
+      "15": false,
+      "6": false,
+      "14": false
+    },
+    "time_seconds": 0.001274931999432738,
+    "nodes_explored": 9,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.942229",
+    "metadata": {
+      "solution_valid": true,
+      "size": 15
+    }
+  },
+  {
+    "problem_type": "3sat",
+    "algorithm": "backtrack",
+    "instance_name": "3sat_n15",
+    "instance_size": {
+      "variables": 15,
+      "clauses": 60,
+      "numbers": 0
+    },
+    "is_satisfiable": true,
+    "solution": {
+      "1": true,
+      "2": true,
+      "3": true,
+      "4": false,
+      "5": false,
+      "6": true,
+      "7": true,
+      "8": true,
+      "9": true,
+      "10": false,
+      "11": true,
+      "12": false,
+      "13": false,
+      "14": true,
+      "15": false
+    },
+    "time_seconds": 0.0024072020005405648,
+    "nodes_explored": 136,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.946509",
+    "metadata": {
+      "solution_valid": true,
+      "size": 15
+    }
+  },
+  {
+    "problem_type": "3sat",
+    "algorithm": "dpll",
+    "instance_name": "3sat_n20",
+    "instance_size": {
+      "variables": 20,
+      "clauses": 80,
+      "numbers": 0
+    },
+    "is_satisfiable": true,
+    "solution": {
+      "7": true,
+      "16": true,
+      "5": true,
+      "6": false,
+      "18": true,
+      "10": false,
+      "4": false,
+      "8": false,
+      "1": true,
+      "12": true,
+      "2": false,
+      "20": false,
+      "9": false,
+      "15": false,
+      "14": true,
+      "17": true,
+      "13": true,
+      "11": false,
+      "3": false,
+      "19": false
+    },
+    "time_seconds": 0.0013216629995440599,
+    "nodes_explored": 9,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.951012",
+    "metadata": {
+      "solution_valid": true,
+      "size": 20
+    }
+  },
+  {
+    "problem_type": "3sat",
+    "algorithm": "backtrack",
+    "instance_name": "3sat_n20",
+    "instance_size": {
+      "variables": 20,
+      "clauses": 80,
+      "numbers": 0
+    },
+    "is_satisfiable": true,
+    "solution": {
+      "1": true,
+      "2": true,
+      "3": false,
+      "4": false,
+      "5": false,
+      "6": false,
+      "7": true,
+      "8": false,
+      "9": false,
+      "10": true,
+      "11": true,
+      "12": true,
+      "13": false,
+      "14": true,
+      "15": false,
+      "16": false,
+      "17": true,
+      "18": true,
+      "19": true,
+      "20": true
+    },
+    "time_seconds": 0.009761789999174653,
+    "nodes_explored": 566,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.962897",
+    "metadata": {
+      "solution_valid": true,
+      "size": 20
+    }
+  },
+  {
+    "problem_type": "3sat",
+    "algorithm": "dpll",
+    "instance_name": "3sat_n25",
+    "instance_size": {
+      "variables": 25,
+      "clauses": 100,
+      "numbers": 0
+    },
+    "is_satisfiable": true,
+    "solution": {
+      "11": true,
+      "16": true,
+      "5": true,
+      "6": false,
+      "1": true,
+      "12": true,
+      "22": false,
+      "24": true,
+      "15": true,
+      "4": true,
+      "25": true,
+      "19": true,
+      "7": true,
+      "10": false,
+      "13": false,
+      "3": true,
+      "21": true,
+      "17": true,
+      "8": false,
+      "20": true,
+      "14": false,
+      "18": true,
+      "9": true,
+      "23": true,
+      "2": false
+    },
+    "time_seconds": 0.0025527340003463905,
+    "nodes_explored": 6,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.969789",
+    "metadata": {
+      "solution_valid": true,
+      "size": 25
+    }
+  },
+  {
+    "problem_type": "3sat",
+    "algorithm": "backtrack",
+    "instance_name": "3sat_n25",
+    "instance_size": {
+      "variables": 25,
+      "clauses": 100,
+      "numbers": 0
+    },
+    "is_satisfiable": true,
+    "solution": {
+      "1": true,
+      "2": true,
+      "3": true,
+      "4": true,
+      "5": true,
+      "6": false,
+      "7": true,
+      "8": false,
+      "9": true,
+      "10": false,
+      "11": true,
+      "12": true,
+      "13": false,
+      "14": false,
+      "15": true,
+      "16": true,
+      "17": true,
+      "18": true,
+      "19": true,
+      "20": true,
+      "21": true,
+      "22": false,
+      "23": true,
+      "24": true,
+      "25": true
+    },
+    "time_seconds": 0.021831845999258803,
+    "nodes_explored": 1044,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:05.994193",
+    "metadata": {
+      "solution_valid": true,
+      "size": 25
+    }
+  },
+  {
+    "problem_type": "3sat",
+    "algorithm": "dpll",
+    "instance_name": "3sat_n30",
+    "instance_size": {
+      "variables": 30,
+      "clauses": 120,
+      "numbers": 0
+    },
+    "is_satisfiable": true,
+    "solution": {
+      "13": false,
+      "23": false,
+      "12": true,
+      "19": true,
+      "18": true,
+      "3": true,
+      "2": true,
+      "5": true,
+      "24": true,
+      "17": true,
+      "20": false,
+      "15": true,
+      "22": false,
+      "16": true,
+      "9": false,
+      "6": false,
+      "21": false,
+      "27": true,
+      "14": false,
+      "11": true,
+      "10": true,
+      "30": true,
+      "26": true,
+      "4": true,
+      "1": false,
+      "25": false,
+      "28": false,
+      "7": false,
+      "8": false,
+      "29": false
+    },
+    "time_seconds": 0.010705548000260023,
+    "nodes_explored": 31,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:06.008479",
+    "metadata": {
+      "solution_valid": true,
+      "size": 30
+    }
+  },
+  {
+    "problem_type": "3sat",
+    "algorithm": "backtrack",
+    "instance_name": "3sat_n30",
+    "instance_size": {
+      "variables": 30,
+      "clauses": 120,
+      "numbers": 0
+    },
+    "is_satisfiable": true,
+    "solution": {
+      "1": true,
+      "2": true,
+      "3": true,
+      "4": false,
+      "5": true,
+      "6": false,
+      "7": true,
+      "8": true,
+      "9": false,
+      "10": true,
+      "11": true,
+      "12": false,
+      "13": false,
+      "14": false,
+      "15": true,
+      "16": true,
+      "17": true,
+      "18": true,
+      "19": true,
+      "20": false,
+      "21": false,
+      "22": false,
+      "23": false,
+      "24": true,
+      "25": false,
+      "26": true,
+      "27": true,
+      "28": true,
+      "29": true,
+      "30": true
+    },
+    "time_seconds": 0.40083397399939713,
+    "nodes_explored": 15118,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:06.411662",
+    "metadata": {
+      "solution_valid": true,
+      "size": 30
+    }
+  },
+  {
+    "problem_type": "subset_sum",
+    "algorithm": "dynamic",
+    "instance_name": "subset_sum_n10",
+    "instance_size": {
+      "variables": 0,
+      "clauses": 0,
+      "numbers": 10
+    },
+    "is_satisfiable": true,
+    "solution": [
+      47,
+      37,
+      50
+    ],
+    "time_seconds": 0.0012217139992571902,
+    "nodes_explored": 1350,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:06.417601",
+    "metadata": {
+      "solution_valid": true,
+      "size": 10
+    }
+  },
+  {
+    "problem_type": "subset_sum",
+    "algorithm": "backtrack",
+    "instance_name": "subset_sum_n10",
+    "instance_size": {
+      "variables": 0,
+      "clauses": 0,
+      "numbers": 10
+    },
+    "is_satisfiable": true,
+    "solution": [
+      49,
+      11,
+      50,
+      24
+    ],
+    "time_seconds": 0.00005194400000618771,
+    "nodes_explored": 35,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:06.420074",
+    "metadata": {
+      "solution_valid": true,
+      "size": 10
+    }
+  },
+  {
+    "problem_type": "subset_sum",
+    "algorithm": "dynamic",
+    "instance_name": "subset_sum_n15",
+    "instance_size": {
+      "variables": 0,
+      "clauses": 0,
+      "numbers": 15
+    },
+    "is_satisfiable": true,
+    "solution": [
+      24
+    ],
+    "time_seconds": 0.0004718000000139,
+    "nodes_explored": 375,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:06.423840",
+    "metadata": {
+      "solution_valid": true,
+      "size": 15
+    }
+  },
+  {
+    "problem_type": "subset_sum",
+    "algorithm": "backtrack",
+    "instance_name": "subset_sum_n15",
+    "instance_size": {
+      "variables": 0,
+      "clauses": 0,
+      "numbers": 15
+    },
+    "is_satisfiable": true,
+    "solution": [
+      24
+    ],
+    "time_seconds": 0.0000693319998390507,
+    "nodes_explored": 84,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:06.426171",
+    "metadata": {
+      "solution_valid": true,
+      "size": 15
+    }
+  },
+  {
+    "problem_type": "subset_sum",
+    "algorithm": "dynamic",
+    "instance_name": "subset_sum_n20",
+    "instance_size": {
+      "variables": 0,
+      "clauses": 0,
+      "numbers": 20
+    },
+    "is_satisfiable": true,
+    "solution": [
+      28,
+      16,
+      42,
+      46,
+      24,
+      20,
+      19,
+      12,
+      34,
+      41
+    ],
+    "time_seconds": 0.0053387499992822995,
+    "nodes_explored": 5660,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:06.434629",
+    "metadata": {
+      "solution_valid": true,
+      "size": 20
+    }
+  },
+  {
+    "problem_type": "subset_sum",
+    "algorithm": "backtrack",
+    "instance_name": "subset_sum_n20",
+    "instance_size": {
+      "variables": 0,
+      "clauses": 0,
+      "numbers": 20
+    },
+    "is_satisfiable": true,
+    "solution": [
+      41,
+      34,
+      12,
+      19,
+      20,
+      24,
+      46,
+      42,
+      10,
+      28,
+      6
+    ],
+    "time_seconds": 0.00002627600042615086,
+    "nodes_explored": 72,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:06.436188",
+    "metadata": {
+      "solution_valid": true,
+      "size": 20
+    }
+  },
+  {
+    "problem_type": "subset_sum",
+    "algorithm": "dynamic",
+    "instance_name": "subset_sum_n25",
+    "instance_size": {
+      "variables": 0,
+      "clauses": 0,
+      "numbers": 25
+    },
+    "is_satisfiable": true,
+    "solution": [
+      38,
+      48,
+      45,
+      30,
+      40,
+      32,
+      30,
+      13
+    ],
+    "time_seconds": 0.006267901000683196,
+    "nodes_explored": 6925,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:06.444951",
+    "metadata": {
+      "solution_valid": true,
+      "size": 25
+    }
+  },
+  {
+    "problem_type": "subset_sum",
+    "algorithm": "backtrack",
+    "instance_name": "subset_sum_n25",
+    "instance_size": {
+      "variables": 0,
+      "clauses": 0,
+      "numbers": 25
+    },
+    "is_satisfiable": true,
+    "solution": [
+      13,
+      30,
+      3,
+      28,
+      32,
+      4,
+      40,
+      30,
+      45,
+      38,
+      13
+    ],
+    "time_seconds": 0.00005181599954084959,
+    "nodes_explored": 50,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:06.447224",
+    "metadata": {
+      "solution_valid": true,
+      "size": 25
+    }
+  },
+  {
+    "problem_type": "subset_sum",
+    "algorithm": "dynamic",
+    "instance_name": "subset_sum_n30",
+    "instance_size": {
+      "variables": 0,
+      "clauses": 0,
+      "numbers": 30
+    },
+    "is_satisfiable": true,
+    "solution": [
+      43,
+      4,
+      3,
+      8,
+      41,
+      43,
+      26
+    ],
+    "time_seconds": 0.005220230999839259,
+    "nodes_explored": 5070,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:06.455887",
+    "metadata": {
+      "solution_valid": true,
+      "size": 30
+    }
+  },
+  {
+    "problem_type": "subset_sum",
+    "algorithm": "backtrack",
+    "instance_name": "subset_sum_n30",
+    "instance_size": {
+      "variables": 0,
+      "clauses": 0,
+      "numbers": 30
+    },
+    "is_satisfiable": true,
+    "solution": [
+      26,
+      43,
+      41,
+      8,
+      14,
+      3,
+      4,
+      27,
+      1,
+      1
+    ],
+    "time_seconds": 0.00019510499987518415,
+    "nodes_explored": 305,
+    "memory_mb": null,
+    "timestamp": "2025-12-31T16:38:06.457894",
+    "metadata": {
+      "solution_valid": true,
+      "size": 30
+    }
+  }
+]
