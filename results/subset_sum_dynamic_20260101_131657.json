@@ -1,0 +1,27 @@
+{
+  "problem_type": "subset_sum",
+  "algorithm": "dynamic",
+  "instance_name": "subset_sum_n15",
+  "instance_size": {
+    "variables": 0,
+    "clauses": 0,
+    "numbers": 15
+  },
+  "is_satisfiable": true,
+  "solution": [
+    22,
+    39,
+    49,
+    41,
+    47,
+    22
+  ],
+  "time_seconds": 0.004926287001580931,
+  "nodes_explored": 3315,
+  "memory_mb": null,
+  "timestamp": "2026-01-01T13:16:57.998341",
+  "metadata": {
+    "solution_valid": true,
+    "size": 15
+  }
+}

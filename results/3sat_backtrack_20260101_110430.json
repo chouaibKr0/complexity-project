@@ -1,0 +1,20 @@
+{
+  "problem_type": "3sat",
+  "algorithm": "backtrack",
+  "instance_name": "3sat_n30",
+  "instance_size": {
+    "variables": 30,
+    "clauses": 120,
+    "numbers": 0
+  },
+  "is_satisfiable": false,
+  "solution": null,
+  "time_seconds": 3.744551558999774,
+  "nodes_explored": 98313,
+  "memory_mb": null,
+  "timestamp": "2026-01-01T11:04:30.085753",
+  "metadata": {
+    "solution_valid": null,
+    "size": 30
+  }
+}
