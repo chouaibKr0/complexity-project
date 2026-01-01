@@ -1,0 +1,41 @@
+{
+  "problem_type": "3sat",
+  "algorithm": "backtrack",
+  "instance_name": "3sat_n20",
+  "instance_size": {
+    "variables": 20,
+    "clauses": 80,
+    "numbers": 0
+  },
+  "is_satisfiable": true,
+  "solution": {
+    "1": false,
+    "2": false,
+    "3": false,
+    "4": true,
+    "5": true,
+    "6": true,
+    "7": false,
+    "8": true,
+    "9": true,
+    "10": true,
+    "11": false,
+    "12": true,
+    "13": true,
+    "14": true,
+    "15": false,
+    "16": false,
+    "17": false,
+    "18": false,
+    "19": false,
+    "20": true
+  },
+  "time_seconds": 0.23161955200021112,
+  "nodes_explored": 9041,
+  "memory_mb": null,
+  "timestamp": "2026-01-01T12:55:38.478566",
+  "metadata": {
+    "solution_valid": true,
+    "size": 20
+  }
+}

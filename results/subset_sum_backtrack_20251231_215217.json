@@ -1,0 +1,28 @@
+{
+  "problem_type": "subset_sum",
+  "algorithm": "backtrack",
+  "instance_name": "subset_sum_n30",
+  "instance_size": {
+    "variables": 0,
+    "clauses": 0,
+    "numbers": 30
+  },
+  "is_satisfiable": true,
+  "solution": [
+    30,
+    33,
+    30,
+    17,
+    15,
+    9,
+    30
+  ],
+  "time_seconds": 0.00007755300066492055,
+  "nodes_explored": 10,
+  "memory_mb": null,
+  "timestamp": "2025-12-31T21:52:17.016998",
+  "metadata": {
+    "solution_valid": true,
+    "size": 30
+  }
+}
