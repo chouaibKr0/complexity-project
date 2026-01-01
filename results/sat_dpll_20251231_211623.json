@@ -1,0 +1,18 @@
+{
+  "problem_type": "sat",
+  "algorithm": "dpll",
+  "instance_name": "",
+  "instance_size": {
+    "variables": 20,
+    "clauses": 91,
+    "numbers": 0
+  },
+  "is_satisfiable": false,
+  "solution": null,
+  "time_seconds": 0.00011572099992918083,
+  "memory_mb": null,
+  "timestamp": "2025-12-31T21:16:23.392347",
+  "metadata": {
+    "solution_valid": null
+  }
+}

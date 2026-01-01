@@ -1,0 +1,168 @@
+[
+  {
+    "problem_type": "sat",
+    "algorithm": "dpll",
+    "instance_name": "",
+    "instance_size": {
+      "variables": 20,
+      "clauses": 91,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.00009826799998791103,
+    "memory_mb": null,
+    "timestamp": "2026-01-01T17:53:19.454716",
+    "metadata": {
+      "solution_valid": null
+    }
+  },
+  {
+    "problem_type": "sat",
+    "algorithm": "backtrack",
+    "instance_name": "",
+    "instance_size": {
+      "variables": 20,
+      "clauses": 91,
+      "numbers": 0
+    },
+    "is_satisfiable": false,
+    "solution": null,
+    "time_seconds": 0.003504461000034098,
+    "memory_mb": null,
+    "timestamp": "2026-01-01T17:53:19.464920",
+    "metadata": {
+      "solution_valid": null
+    }
+  },
+  {
+    "problem_type": "3sat",
+    "algorithm": "dpll",
+    "instance_name": "",
+    "instance_size": {
+      "variables": 20,
+      "clauses": 91,
+      "numbers": 0
+    },
+    "is_satisfiable": true,
+    "solution": {
+      "4": false,
+      "1": false,
+      "9": true,
+      "3": true,
+      "15": true,
+      "8": true,
+      "11": false,
+      "5": true,
+      "2": false,
+      "18": true,
+      "13": true,
+      "14": false,
+      "17": false,
+      "16": true,
+      "20": true,
+      "19": true,
+      "12": false,
+      "10": false,
+      "7": false,
+      "6": false
+    },
+    "time_seconds": 0.017961714999955802,
+    "memory_mb": null,
+    "timestamp": "2026-01-01T17:53:19.488664",
+    "metadata": {
+      "solution_valid": true
+    }
+  },
+  {
+    "problem_type": "3sat",
+    "algorithm": "backtrack",
+    "instance_name": "",
+    "instance_size": {
+      "variables": 20,
+      "clauses": 91,
+      "numbers": 0
+    },
+    "is_satisfiable": true,
+    "solution": {
+      "1": false,
+      "2": false,
+      "3": true,
+      "4": false,
+      "5": true,
+      "6": true,
+      "7": false,
+      "8": true,
+      "9": true,
+      "10": false,
+      "11": false,
+      "12": false,
+      "13": true,
+      "14": false,
+      "15": true,
+      "16": true,
+      "17": false,
+      "18": true,
+      "19": true,
+      "20": true
+    },
+    "time_seconds": 0.27407998799992583,
+    "memory_mb": null,
+    "timestamp": "2026-01-01T17:53:19.769569",
+    "metadata": {
+      "solution_valid": true
+    }
+  },
+  {
+    "problem_type": "subset_sum",
+    "algorithm": "dynamic",
+    "instance_name": "",
+    "instance_size": {
+      "variables": null,
+      "clauses": null,
+      "numbers": 10
+    },
+    "is_satisfiable": true,
+    "solution": [
+      48,
+      9,
+      18,
+      48,
+      2,
+      8,
+      41
+    ],
+    "time_seconds": 0.005767645999981141,
+    "memory_mb": null,
+    "timestamp": "2026-01-01T17:53:19.781651",
+    "metadata": {
+      "solution_valid": true
+    }
+  },
+  {
+    "problem_type": "subset_sum",
+    "algorithm": "backtrack",
+    "instance_name": "",
+    "instance_size": {
+      "variables": null,
+      "clauses": null,
+      "numbers": 10
+    },
+    "is_satisfiable": true,
+    "solution": [
+      41,
+      8,
+      2,
+      48,
+      18,
+      9,
+      48
+    ],
+    "time_seconds": 0.00007632899996679043,
+    "memory_mb": null,
+    "timestamp": "2026-01-01T17:53:19.794007",
+    "metadata": {
+      "solution_valid": true
+    }
+  }
+]

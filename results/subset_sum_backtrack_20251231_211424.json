@@ -1,0 +1,26 @@
+{
+  "problem_type": "subset_sum",
+  "algorithm": "backtrack",
+  "instance_name": "",
+  "instance_size": {
+    "variables": null,
+    "clauses": null,
+    "numbers": 10
+  },
+  "is_satisfiable": true,
+  "solution": [
+    41,
+    8,
+    2,
+    48,
+    18,
+    9,
+    48
+  ],
+  "time_seconds": 0.00004560999968816759,
+  "memory_mb": null,
+  "timestamp": "2025-12-31T21:14:24.780694",
+  "metadata": {
+    "solution_valid": true
+  }
+}
