@@ -1,0 +1,20 @@
+{
+  "problem_type": "3sat",
+  "algorithm": "dpll",
+  "instance_name": "3sat_n25",
+  "instance_size": {
+    "variables": 25,
+    "clauses": 100,
+    "numbers": 0
+  },
+  "is_satisfiable": false,
+  "solution": null,
+  "time_seconds": 0.033413597000162554,
+  "nodes_explored": 77,
+  "memory_mb": null,
+  "timestamp": "2026-01-01T12:56:45.487989",
+  "metadata": {
+    "solution_valid": null,
+    "size": 25
+  }
+}
